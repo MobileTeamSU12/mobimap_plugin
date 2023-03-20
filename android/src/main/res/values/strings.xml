@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="msg_permission_gps_denied">Vui lòng cung cấp quyền truy cập vị trí cho ứng dụng.</string>
+    <string name="msg_can_not_get_gps">Không thể lấy tạo độ hiện tại, vui lòng bật cải thiện độ chính xác trong cài đặt GPS.</string>
+</resources>
