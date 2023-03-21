@@ -223,7 +223,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\nCOMMIT_HASH=$(git rev-parse --short HEAD)\n/usr/libexec/PlistBuddy -c \"Set :COMMIT_HASH $COMMIT_HASH\" \"$INFOPLIST_FILE\"\n";
 		};
 		E28F8672FEBE0828C0F4DA5D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
