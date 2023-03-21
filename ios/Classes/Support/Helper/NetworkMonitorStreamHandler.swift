@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Flutter
 open class NetworkMonitorStreamHandler:NSObject, FlutterStreamHandler{
     var sink: FlutterEventSink?
     var timer: Timer?

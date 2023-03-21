@@ -7,7 +7,7 @@ import Network
 import Photos
 import flutter_local_notifications
 import FirebaseMessaging
-import Firebase
+import FirebaseCore
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate {
@@ -30,7 +30,7 @@ import Firebase
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         GMSServices.provideAPIKey("AIzaSyB5GlI1gKmxppYi6MxzJo2AgzyfE5C-6d8")
-        GeneratedPluginRegistrant.register(with: self)
+//        GeneratedPluginRegistrant.register(with: self)
         self.controler = window?.rootViewController as? FlutterViewController
         self.registerChanelMethod(controler: self.controler)
         self.registerEventMethod(controler: self.controler)

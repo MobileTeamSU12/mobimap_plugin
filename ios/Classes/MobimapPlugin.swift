@@ -3,7 +3,7 @@ import UIKit
 
 public class MobimapPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "mobimap_plugin", binaryMessenger: registrar.messenger())
+      let channel = FlutterMethodChannel(name: ChanelName.method.rawValue, binaryMessenger: registrar.messenger())
     let instance = MobimapPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }

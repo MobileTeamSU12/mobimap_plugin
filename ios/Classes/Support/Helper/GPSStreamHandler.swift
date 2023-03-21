@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import Flutter
 open class GPSStreamHandler:NSObject, FlutterStreamHandler{
     var sink: FlutterEventSink?
     var param: Any?
