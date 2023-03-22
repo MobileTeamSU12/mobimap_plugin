@@ -9,8 +9,7 @@ import flutter_local_notifications
 import FirebaseMessaging
 import FirebaseCore
 
-@UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+open class AppDelegatePlugin: FlutterAppDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     var latLong:String = ""
     var id:String =  ""
     var drawText:NSArray = []
@@ -24,13 +23,15 @@ import FirebaseCore
     var gPSStreamHandler:GPSStreamHandler!
     var chanelEventNetwork:FlutterEventChannel!
     var networkStreamHandler:NetworkMonitorStreamHandler!
+    open var GMSServicesAPIKey:String = ""
     // MARK: Application Life Cycle
-    override func application(
+    open override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        GMSServices.provideAPIKey("AIzaSyB5GlI1gKmxppYi6MxzJo2AgzyfE5C-6d8")
-//        GeneratedPluginRegistrant.register(with: self)
+//        GMSServices.provideAPIKey("AIzaSyB5GlI1gKmxppYi6MxzJo2AgzyfE5C-6d8")
+        GMSServices.provideAPIKey(GMSServicesAPIKey)
+        //        GeneratedPluginRegistrant.register(with: self)
         self.controler = window?.rootViewController as? FlutterViewController
         self.registerChanelMethod(controler: self.controler)
         self.registerEventMethod(controler: self.controler)
@@ -38,46 +39,112 @@ import FirebaseCore
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
-    
-
-    override func applicationDidBecomeActive(_ application: UIApplication){
-//        if CLLocationManager.authorizationStatus() == .denied {
-//            FMapHelper.checkGPSMobiMap()
-//        } else if AVCaptureDevice.authorizationStatus(for: .video) == AVAuthorizationStatus.denied{
-//            FMapHelper.checkCameraSeesion()
-//        } else if PHPhotoLibrary.authorizationStatus() == PHAuthorizationStatus.denied{
-//            FMapHelper.checkLibraryCamera()
-//        }
+    open override func applicationDidBecomeActive(_ application: UIApplication){
+        //        if CLLocationManager.authorizationStatus() == .denied {
+        //            FMapHelper.checkGPSMobiMap()
+        //        } else if AVCaptureDevice.authorizationStatus(for: .video) == AVAuthorizationStatus.denied{
+        //            FMapHelper.checkCameraSeesion()
+        //        } else if PHPhotoLibrary.authorizationStatus() == PHAuthorizationStatus.denied{
+        //            FMapHelper.checkLibraryCamera()
+        //        }
         if (self.gPSStreamHandler != nil && self.chanelEventGPS != nil){
-//            self.chanelEventGPS.setStreamHandler(self.gPSStreamHandler)
-//            let _ =  self.gPSStreamHandler.onListen(withArguments: self.gPSStreamHandler.param, eventSink: self.gPSStreamHandler.sink!)
+            //            self.chanelEventGPS.setStreamHandler(self.gPSStreamHandler)
+            //            let _ =  self.gPSStreamHandler.onListen(withArguments: self.gPSStreamHandler.param, eventSink: self.gPSStreamHandler.sink!)
             self.gPSStreamHandler.sendGPSStatus()
         }
         if (self.chanelEventNetwork != nil && self.networkStreamHandler != nil){
-//            self.chanelEventNetwork.setStreamHandler(self.networkStreamHandler)
-//            let _ =  self.gPSStreamHandler.onListen(withArguments: self.gPSStreamHandler.param, eventSink: self.gPSStreamHandler.sink!)
+            //            self.chanelEventNetwork.setStreamHandler(self.networkStreamHandler)
+            //            let _ =  self.gPSStreamHandler.onListen(withArguments: self.gPSStreamHandler.param, eventSink: self.gPSStreamHandler.sink!)
             self.networkStreamHandler.sendNetworkStatus()
         }
     }
     
-    override func applicationDidEnterBackground(_ application: UIApplication) {
+    open override func applicationDidEnterBackground(_ application: UIApplication) {
         self.startStandardUpdates()
     }
     
-    override func applicationWillEnterForeground(_ application: UIApplication) {
+    open override func applicationWillEnterForeground(_ application: UIApplication) {
         self.startStandardUpdates()
     }
     
-    override func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    open override func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         return false
     }
-    override func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+    open override func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
         let controler:FlutterViewController = window?.rootViewController as! FlutterViewController
         let bateryChanel = FlutterMethodChannel(name: "plugins.flutter.io/quick_actions", binaryMessenger: controler.binaryMessenger)
         bateryChanel.invokeMethod("launch", arguments: shortcutItem.type)
     }
+    
+    // MARK: push Notification Firebase
+    
+    open override func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler( [.alert, .badge, .sound])
+    }
+    
+    open override func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Swift.Void) {
+        print("Do what ever you want")
+    }
+    
+    open override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+    }
+}
+// MARK: CLLocationManagerDelegate
+extension AppDelegatePlugin : CLLocationManagerDelegate {
+    // MARK: CLLocationManager
+    private func getLocation(controler:FlutterViewController, completion: ((String) -> ())? = nil) {
+        
+        if (CLLocationManager.locationServicesEnabled())
+        {
+            locationManager = CLLocationManager()
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.requestAlwaysAuthorization()
+            locationManager.startUpdatingLocation()
+            completionCallLocation = completion
+        }
+    }
+    
+    open func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("error:: \(error.localizedDescription)")
+    }
+    
+    open func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedWhenInUse {
+            locationManager.requestLocation()
+        }
+    }
+    
+    open func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let location = locations.last! as CLLocation
+        let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        self.latLong = "\(String(center.latitude)) , \(String(center.longitude))"
+        if (completionCallLocation != nil){
+            completionCallLocation!(self.latLong)
+        }
+    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+            UserDefaults.standard.setValue("fcmToken", forKey: fcmToken)
+    }
+    func registerNotification(application:UIApplication) {
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self;
+        center.requestAuthorization(options:[.badge, .alert, .sound]) { (granted, error) in
+            // If granted comes true you can enabled features based on authorization.
+            guard granted else { return }
+            DispatchQueue.main.async {
+                application.registerForRemoteNotifications()
+            }
+        }
+    }
+}
+// MARK: Custom Method
+extension AppDelegatePlugin{
     // MARK: Register Chanel Method
-    fileprivate func registerChanelMethod(controler:FlutterViewController) {
+    private func registerChanelMethod(controler:FlutterViewController) {
         let chanelMethod = FlutterMethodChannel(name: ChanelName.method.rawValue, binaryMessenger: controler.binaryMessenger)
         chanelMethod.setMethodCallHandler ({ [self] (call:FlutterMethodCall, result:@escaping FlutterResult) -> Void in
             switch call.method{
@@ -104,7 +171,7 @@ import FirebaseCore
                 break
             case FunctionName.requestPermission.rawValue:
                 guard let param = call.arguments as? [String:String] else {return}
-                var permistionRequest:String = param[FunctionParameters.permissionRequest.rawValue] ?? ""
+                let permistionRequest:String = param[FunctionParameters.permissionRequest.rawValue] ?? ""
 //                var resultMethod = self.requestPermission(controler: controler,permistionRequest: permistionRequest.uppercased())
 //                result(resultMethod.mes)
                 self.requestPermission(controler: controler, permistionRequest: permistionRequest) { status, mes in
@@ -172,7 +239,7 @@ import FirebaseCore
         })
     }
     // MARK: Register Event Method
-    fileprivate func registerEventMethod(controler:FlutterViewController) {
+    private func registerEventMethod(controler:FlutterViewController) {
         self.chanelEventGPS = FlutterEventChannel(name: ChanelName.eventGPS.rawValue, binaryMessenger: self.controler.binaryMessenger)
         self.gPSStreamHandler = GPSStreamHandler(parentVCtrl: controler)
         self.chanelEventGPS.setStreamHandler(self.gPSStreamHandler)
@@ -236,7 +303,7 @@ import FirebaseCore
         controler.present(vc, animated: true)
     }
     // MARK: imagePickerController
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    open func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true)
         let resizedImageWithText = FMapHelper.resizedImage(withDrawText: (self.drawText as! [Any]), didFinishPickingMediaWithInfo: info) as UIImage
 //        FMapHelper.resizedImage(withText: self.id, location: self.location, didFinishPickingMediaWithInfo: info) as UIImage
@@ -433,67 +500,4 @@ import FirebaseCore
         }
     }
 }
-extension AppDelegate : CLLocationManagerDelegate {
-    // MARK: CLLocationManager
-    private func getLocation(controler:FlutterViewController, completion: ((String) -> ())? = nil) {
-        
-        if (CLLocationManager.locationServicesEnabled())
-        {
-            locationManager = CLLocationManager()
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
-            locationManager.requestWhenInUseAuthorization()
-            locationManager.requestAlwaysAuthorization()
-            locationManager.startUpdatingLocation()
-            completionCallLocation = completion
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("error:: \(error.localizedDescription)")
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .authorizedWhenInUse {
-            locationManager.requestLocation()
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location = locations.last! as CLLocation
-        let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-        self.latLong = "\(String(center.latitude)) , \(String(center.longitude))"
-        if (completionCallLocation != nil){
-            completionCallLocation!(self.latLong)
-        }
-    }
-    
-    // MARK: push Notification Firebase
-    
-    override func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler( [.alert, .badge, .sound])
-    }
-    
-    override func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Swift.Void) {
-           print("Do what ever you want")
-       }
-    
-    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        Messaging.messaging().apnsToken = deviceToken
-    }
-    
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
-            UserDefaults.standard.setValue("fcmToken", forKey: fcmToken)
-    }
-    func registerNotification(application:UIApplication) {
-        let center = UNUserNotificationCenter.current()
-        center.delegate = self;
-        center.requestAuthorization(options:[.badge, .alert, .sound]) { (granted, error) in
-            // If granted comes true you can enabled features based on authorization.
-            guard granted else { return }
-            DispatchQueue.main.async {
-                application.registerForRemoteNotifications()
-            }
-        }
-    }
-}
+
