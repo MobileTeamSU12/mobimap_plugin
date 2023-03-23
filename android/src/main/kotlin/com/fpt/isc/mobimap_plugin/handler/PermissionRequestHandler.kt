@@ -33,7 +33,7 @@ class PermissionRequestHandler(
 //        Manifest.permission.ACCESS_COARSE_LOCATION,
 //    )
     val permissionsNeedRequest = mutableListOf<String>()
-     lateinit var permissionsRequest : List<String>
+    lateinit var permissionsRequest: List<String>
 
     fun requestPermission(permissions: String): Boolean {
         permissionsRequest = findPermissions(permissions)
@@ -42,15 +42,18 @@ class PermissionRequestHandler(
             if (!Environment.isExternalStorageManager()) {
                 val permissionIntent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
 //                plugin.context.startActivity(permissionIntent)
-                plugin.activity.startActivityForResult(permissionIntent, Constants.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION_REQUEST)
-                return  false
+                plugin.activity.startActivityForResult(
+                    permissionIntent,
+                    Constants.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION_REQUEST
+                )
+                return false
             }
-            grandOtherPermission()
         }
+        grandOtherPermission()
         return false
     }
 
-    private  fun grandOtherPermission(){
+    private fun grandOtherPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             permissionsNeedRequest.clear()
             for (permission in permissionsRequest) {
