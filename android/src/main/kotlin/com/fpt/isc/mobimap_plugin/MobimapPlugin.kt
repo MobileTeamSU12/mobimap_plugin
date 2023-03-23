@@ -118,6 +118,7 @@ class MobimapPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                     val permission: Any? = call.argument(Constants.PERMISSIONS_REQUEST_ARGUMENT)
                     if (permission is String) {
                         val handler = PermissionRequestHandler(binaryMessenger, this, result)
+                        handler.init()
                         handler.requestPermission(permission)
                         //                        handler.initEvent(true)
                     } else {
@@ -223,6 +224,7 @@ class MobimapPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         activity = binding.activity;
         binding.addActivityResultListener(this)
+        binding.addRequestPermissionsResultListener(this)
 
         val internetConnection = GetInternetConnectionHandler(activity)
         internetConnection.checkInternetConnection()

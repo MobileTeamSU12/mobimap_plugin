@@ -8,10 +8,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Environment
 import android.provider.Settings
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.fpt.isc.mobimap_plugin.MobimapPlugin
 import com.fpt.isc.mobimap_plugin.constants.Constants
+import com.fpt.isc.mobimap_plugin.listener.OnActivityResultListener
 import com.fpt.isc.mobimap_plugin.listener.OnRequestPermissionsResult
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodChannel
@@ -31,18 +33,24 @@ class PermissionRequestHandler(
 //        Manifest.permission.ACCESS_COARSE_LOCATION,
 //    )
     val permissionsNeedRequest = mutableListOf<String>()
+     lateinit var permissionsRequest : List<String>
 
     fun requestPermission(permissions: String): Boolean {
-        val permissionsRequest = findPermissions(permissions)
+        permissionsRequest = findPermissions(permissions)
         plugin.onResultPermissionCallback = this
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (!Environment.isExternalStorageManager()) {
                 val permissionIntent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
-                permissionIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
-                plugin.context.startActivity(permissionIntent)
+//                plugin.context.startActivity(permissionIntent)
+                plugin.activity.startActivityForResult(permissionIntent, Constants.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION_REQUEST)
+                return  false
             }
+            grandOtherPermission()
         }
+        return false
+    }
 
+    private  fun grandOtherPermission(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             permissionsNeedRequest.clear()
             for (permission in permissionsRequest) {
@@ -58,7 +66,6 @@ class PermissionRequestHandler(
         } else {
             result.success(true)
         }
-        return false
     }
 
     private fun checkIfAlreadyHasPermission(context: Context, permission: String): Boolean {
@@ -78,6 +85,12 @@ class PermissionRequestHandler(
     }
 
     override fun getEventChannelName(): String = Constants.PERMISSION_REQUEST_EVENT
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == Constants.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION_REQUEST) {
+            grandOtherPermission()
+        }
+    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

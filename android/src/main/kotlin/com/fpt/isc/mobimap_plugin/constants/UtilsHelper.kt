@@ -95,7 +95,7 @@ object UtilsHelper {
         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
         val uri = Uri.fromParts("package", context.packageName, null)
         intent.data = uri
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
         context.startActivity(intent)
     }
 

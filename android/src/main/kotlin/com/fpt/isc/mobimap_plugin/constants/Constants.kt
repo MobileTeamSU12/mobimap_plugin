@@ -70,5 +70,7 @@ class Constants {
         const val disconnected = 3
         const val unknown = 4
         const val eof = -1
+
+        const val ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION_REQUEST = 302
     }
 }

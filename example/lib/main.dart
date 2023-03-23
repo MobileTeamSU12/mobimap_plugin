@@ -98,8 +98,8 @@ class _MyAppState extends State<MyApp> {
               ),
               TestLabel(
                 label: 'Permission',
-                child: Container(color: Colors.red, child: GestureDetector(onTap: () {
-                  MobiMapPlugin.requestPermission(type: 'ALL');
+                child: Container(color: Colors.red, child: GestureDetector(onTap: () async{
+                  print( await MobiMapPlugin.requestPermission(type: 'ALL'));
                 },),),
               ),
 
@@ -113,13 +113,9 @@ class _MyAppState extends State<MyApp> {
                 },),),
               ),
               TestLabel(
-                label: 'get from gallery',
+                label: 'Location',
                 child: Container(color: Colors.red, child: GestureDetector(onTap: () async {
-                  image = await MobiMapImagePlugin.getImageFromGallery();
-                  print(image);
-                  setState(() {
-
-                  });
+                  print(await MobiMapGPSPlugin.getLocation());
                 },),),
               ),
               Text(image),
@@ -143,13 +139,6 @@ class _MyAppState extends State<MyApp> {
                 child: FutureBuilder(
                   builder: (context, snapshot) => Text(snapshot.data.toString()),
                   future: MobiMapGPSPlugin.getGpsStatus(),
-                ),
-              ),
-              TestLabel(
-                label: 'Current location',
-                child: FutureBuilder(
-                  builder: (context, snapshot) => Text(snapshot.data.toString()),
-                  future: MobiMapGPSPlugin.getLocation(),
                 ),
               ),
             ],
