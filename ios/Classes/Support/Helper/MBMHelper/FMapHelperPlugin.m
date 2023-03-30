@@ -12,7 +12,7 @@
 #import "GoogleMaps/GoogleMaps.h"
 #import <Photos/Photos.h>
 #import <Reachability/ReachabilitySwift-umbrella.h>
-@implementation FMapHelper
+@implementation FMapHelperPlugin
 
 #pragma mark - imagePickerController
 

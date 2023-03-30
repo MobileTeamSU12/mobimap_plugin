@@ -259,7 +259,7 @@ extension AppDelegatePlugin{
     }
     // MARK: getImei
     private func getImei()-> String{
-        let ime = OpenUDID.value() ?? ""
+        let ime = OpenUDIDPlugin.value() ?? ""
         return ime
     }
     // MARK: getVersion
