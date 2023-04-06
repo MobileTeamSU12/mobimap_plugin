@@ -9,7 +9,7 @@ import flutter_local_notifications
 import FirebaseMessaging
 import FirebaseCore
 
-open class AppDelegatePlugin: FlutterAppDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+@objc open class AppDelegatePlugin: FlutterAppDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     var latLong:String = ""
     var id:String =  ""
     var drawText:NSArray = []
