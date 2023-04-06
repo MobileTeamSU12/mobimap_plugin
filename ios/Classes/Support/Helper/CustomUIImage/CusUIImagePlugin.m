@@ -6,9 +6,9 @@
 //  Copyright © 2017 Dang Thi Tu Uyen. All rights reserved.
 //
 
-#import "CusUIImage.h"
+#import "CusUIImagePlugin.h"
 
-@implementation CusUIImage
+@implementation CusUIImagePlugin
 
 + (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize {
     UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);

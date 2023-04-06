@@ -6,13 +6,13 @@
 //  Copyright © 2020 RAD. All rights reserved.
 //
 
-#import "FMapHelper.h"
+#import "FMapHelperPlugin.h"
 #import <AVFoundation/AVFoundation.h>
-#import "CusUIImage.h"
+#import "CusUIImagePlugin.h"
 #import "GoogleMaps/GoogleMaps.h"
 #import <Photos/Photos.h>
 #import <Reachability/ReachabilitySwift-umbrella.h>
-@implementation FMapHelper
+@implementation FMapHelperPlugin
 
 #pragma mark - imagePickerController
 
@@ -67,13 +67,13 @@
     }
     NSString *stringId = drawText.count > 0 ? drawText[0] : @"";
     NSString *stringLocation = drawText.count > 0 ? drawText[1] : @"";
-    UIImage *resizedImage =[CusUIImage imageWithImage:chosenImage scaledToSize:CGSizeMake(chosenImage.size.width / 2, chosenImage.size.height / 2)];
+    UIImage *resizedImage =[CusUIImagePlugin imageWithImage:chosenImage scaledToSize:CGSizeMake(chosenImage.size.width / 2, chosenImage.size.height / 2)];
     UIFont *font = [UIFont boldSystemFontOfSize:resizedImage.size.height / resizedImage.size.width * 32];
     NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
     double  wString = [[[NSAttributedString alloc] initWithString:stringId attributes:attributes] size].width;
     double  wStringlocation = [[[NSAttributedString alloc] initWithString:stringLocation attributes:attributes] size].width;
     wString = wString <= wStringlocation ? resizedImage.size.width - wStringlocation : resizedImage.size.width - wString;
-    UIImage *resizedImageWithText = [CusUIImage drawFront:resizedImage text:fullPhotoFilename atPoint:CGPointMake(wString,resizedImage.size.height)];
+    UIImage *resizedImageWithText = [CusUIImagePlugin drawFront:resizedImage text:fullPhotoFilename atPoint:CGPointMake(wString,resizedImage.size.height)];
     return resizedImageWithText;
 }
 
@@ -89,9 +89,9 @@
     NSDictionary *chosenImgData = info[UIImagePickerControllerMediaMetadata];
     NSDictionary *chosenImgExif = [chosenImgData objectForKey:@"{Exif}"];
     NSString *chosenImgDateTimeOriginal = [chosenImgExif objectForKey:@"DateTimeOriginal"];
-    UIImage *resizedImage = [CusUIImage imageWithImage:chosenImage scaledToSize:CGSizeMake(1024, 1024)];
+    UIImage *resizedImage = [CusUIImagePlugin imageWithImage:chosenImage scaledToSize:CGSizeMake(1024, 1024)];
     wString = wString <= wStringlocation ? resizedImage.size.width - wStringlocation : resizedImage.size.width - wString;
-    UIImage *resizedImageWithText = [CusUIImage drawFront:resizedImage text:[NSString stringWithFormat:@"%@\n%@\n%@",name,location,chosenImgDateTimeOriginal] atPoint:CGPointMake(wString-5,900)];
+    UIImage *resizedImageWithText = [CusUIImagePlugin drawFront:resizedImage text:[NSString stringWithFormat:@"%@\n%@\n%@",name,location,chosenImgDateTimeOriginal] atPoint:CGPointMake(wString-5,900)];
     return resizedImageWithText;
 }
 
@@ -101,13 +101,13 @@
     NSDictionary *chosenImgExif = [chosenImgData objectForKey:@"{Exif}"];
     NSString *chosenImgDateTimeOriginal = [chosenImgExif objectForKey:@"DateTimeOriginal"] ;
     NSString *fullPhotoFilename = [NSString stringWithFormat:@"%@\n%@\n%@",name,location,chosenImgDateTimeOriginal];
-    UIImage *resizedImage =[CusUIImage imageWithImage:chosenImage scaledToSize:CGSizeMake(720, 1080)];
+    UIImage *resizedImage =[CusUIImagePlugin imageWithImage:chosenImage scaledToSize:CGSizeMake(720, 1080)];
     UIFont *font = [UIFont boldSystemFontOfSize:resizedImage.size.height / resizedImage.size.width * 16];
     NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
     double  wString = [[[NSAttributedString alloc] initWithString:name attributes:attributes] size].width;
     double  wStringlocation = [[[NSAttributedString alloc] initWithString:location attributes:attributes] size].width;
     wString = wString <= wStringlocation ? resizedImage.size.width - wStringlocation : resizedImage.size.width - wString;
-    UIImage *resizedImageWithText = [CusUIImage drawFront:resizedImage text:fullPhotoFilename atPoint:CGPointMake(wString,resizedImage.size.height)];
+    UIImage *resizedImageWithText = [CusUIImagePlugin drawFront:resizedImage text:fullPhotoFilename atPoint:CGPointMake(wString,resizedImage.size.height)];
     return resizedImageWithText;
 }
 
@@ -123,7 +123,7 @@
     if (authStatus == AVAuthorizationStatusAuthorized) {
         // do your logic
     } else if(authStatus == AVAuthorizationStatusDenied){
-        [FMapHelper checkCameraSeesion];
+        [FMapHelperPlugin checkCameraSeesion];
         return;
     } else if(authStatus == AVAuthorizationStatusRestricted){
         // restricted, normally won't happen
@@ -138,7 +138,7 @@
         // impossible, unknown authorization status
     }
     if (parentVCtrl == nil){
-        [FMapHelper addSubVCtrl:picker];
+        [FMapHelperPlugin addSubVCtrl:picker];
         return;
     }
     [parentVCtrl presentViewController:picker animated:YES completion:NULL];
@@ -150,7 +150,7 @@
     picker.allowsEditing = isEdit;
     picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     if (parentVCtrl == nil){
-        [FMapHelper addSubVCtrl:picker];
+        [FMapHelperPlugin addSubVCtrl:picker];
         return;
     }
     [parentVCtrl presentViewController:picker animated:YES completion:NULL];
@@ -179,7 +179,7 @@
         [[UIApplication sharedApplication] openURL:url];
     }]];
     if ([CLLocationManager authorizationStatus] == AVAuthorizationStatusDenied) {
-        topRootViewController = [FMapHelper addSubVCtrl:alertController];
+        topRootViewController = [FMapHelperPlugin addSubVCtrl:alertController];
     }
 }
 
@@ -196,7 +196,7 @@
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"App-Prefs:root=WIFI"]];
         }
     }]];
-    topRootViewController = [FMapHelper addSubVCtrl:alertController];
+    topRootViewController = [FMapHelperPlugin addSubVCtrl:alertController];
 }
 
 + (void)checkCameraSeesion {
@@ -212,7 +212,7 @@
     NSString *mediaType = AVMediaTypeVideo;
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:mediaType];
     if (authStatus== AVAuthorizationStatusDenied) {
-       topRootViewController = [FMapHelper addSubVCtrl:alertController];
+       topRootViewController = [FMapHelperPlugin addSubVCtrl:alertController];
     } else {
         [topRootViewController dismissViewControllerAnimated:NO completion:nil];
     }
@@ -230,7 +230,7 @@
        }]];
        PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
        if (status == AVAuthorizationStatusDenied) {
-        topRootViewController = [FMapHelper addSubVCtrl:alertController];
+        topRootViewController = [FMapHelperPlugin addSubVCtrl:alertController];
        } else {
            [topRootViewController dismissViewControllerAnimated:NO completion:nil];
        }
@@ -258,7 +258,7 @@
             NSString *mediaType = AVMediaTypeVideo;
             AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:mediaType];
             if (authStatus== AVAuthorizationStatusDenied) {
-               topRootViewController = [FMapHelper addSubVCtrl:alertController];
+               topRootViewController = [FMapHelperPlugin addSubVCtrl:alertController];
             } else {
                 [topRootViewController dismissViewControllerAnimated:NO completion:nil];
             }

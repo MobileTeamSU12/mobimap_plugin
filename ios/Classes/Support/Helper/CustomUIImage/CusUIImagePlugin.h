@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CusUIImage : UIImage
+@interface CusUIImagePlugin : UIImage
 + (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
 
-+(UIImage*)drawFront:(UIImage*)image text:(NSString*)text atPoint:(CGPoint)point;
++ (UIImage *)drawFront:(UIImage *)image text:(NSString *)text atPoint:(CGPoint)point;
 
 @end

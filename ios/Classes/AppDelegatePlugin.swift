@@ -41,11 +41,11 @@ open class AppDelegatePlugin: FlutterAppDelegate,UINavigationControllerDelegate,
     
     open override func applicationDidBecomeActive(_ application: UIApplication){
         //        if CLLocationManager.authorizationStatus() == .denied {
-        //            FMapHelper.checkGPSMobiMap()
+        //            FMapHelperPlugin.checkGPSMobiMap()
         //        } else if AVCaptureDevice.authorizationStatus(for: .video) == AVAuthorizationStatus.denied{
-        //            FMapHelper.checkCameraSeesion()
+        //            FMapHelperPlugin.checkCameraSeesion()
         //        } else if PHPhotoLibrary.authorizationStatus() == PHAuthorizationStatus.denied{
-        //            FMapHelper.checkLibraryCamera()
+        //            FMapHelperPlugin.checkLibraryCamera()
         //        }
         if (self.gPSStreamHandler != nil && self.chanelEventGPS != nil){
             //            self.chanelEventGPS.setStreamHandler(self.gPSStreamHandler)
@@ -259,7 +259,7 @@ extension AppDelegatePlugin{
     }
     // MARK: getImei
     private func getImei()-> String{
-        let ime = OpenUDID.value() ?? ""
+        let ime = OpenUDIDPlugin.value() ?? ""
         return ime
     }
     // MARK: getVersion
@@ -305,14 +305,14 @@ extension AppDelegatePlugin{
     // MARK: imagePickerController
     open func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true)
-        let resizedImageWithText = FMapHelper.resizedImage(withDrawText: (self.drawText as! [Any]), didFinishPickingMediaWithInfo: info) as UIImage
-//        FMapHelper.resizedImage(withText: self.id, location: self.location, didFinishPickingMediaWithInfo: info) as UIImage
+        let resizedImageWithText = FMapHelperPlugin.resizedImage(withDrawText: (self.drawText as! [Any]), didFinishPickingMediaWithInfo: info) as UIImage
+//        FMapHelperPlugin.resizedImage(withText: self.id, location: self.location, didFinishPickingMediaWithInfo: info) as UIImage
         // print out the image size as a test
         print(resizedImageWithText.size)
         print(resizedImageWithText.pngData() as Any)
         //MARK: - Saving Image here
         if (picker.sourceType == .camera) {
-            FMapHelper.saveImage(withFileName: self.filename, image: resizedImageWithText) { isComplete in
+            FMapHelperPlugin.saveImage(withFileName: self.filename, image: resizedImageWithText) { isComplete in
                 if isComplete {
                     let phFetchRes = PHAsset.fetchAssets(with: PHAssetMediaType.image , options: nil) // Fetch all PHAssets of images from Camera roll
                     let asset =  phFetchRes.lastObject//phFetchRes.object(at: 0) // retrieve cell 0 as a asset
@@ -336,7 +336,7 @@ extension AppDelegatePlugin{
     
     func saveImageToGallery(image:UIImage,completion: ((String) -> ())? = nil) {
         self.completionCallGetPathImage = completion
-        FMapHelper.saveImage(withFileName: self.filename, image: image) { isComplete in
+        FMapHelperPlugin.saveImage(withFileName: self.filename, image: image) { isComplete in
             if isComplete {
                 self.completionCallGetPathImage!("1")
             } else {
