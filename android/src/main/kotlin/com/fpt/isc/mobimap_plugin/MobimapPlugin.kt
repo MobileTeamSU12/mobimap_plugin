@@ -92,8 +92,9 @@ class MobimapPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                     result.success(true)
                 }
                 Constants.OPEN_APP_SETTING_FUN -> {
-                    UtilsHelper.gotoSettingPermission(context)
-                    result.success(true)
+                    val handler = AppSettingHandler(binaryMessenger, this, result)
+                    handler.init()
+                    handler.gotoSettingPermission()
                 }
                 Constants.UPDATE_APP_VERSION -> {
 

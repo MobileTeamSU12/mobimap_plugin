@@ -72,5 +72,6 @@ class Constants {
         const val eof = -1
 
         const val ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION_REQUEST = 302
+        const val APP_SETTING_REQUEST = 312
     }
 }

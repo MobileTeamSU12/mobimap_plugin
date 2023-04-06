@@ -2,6 +2,7 @@ package com.fpt.isc.mobimap_plugin.constants
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -96,7 +97,7 @@ object UtilsHelper {
         val uri = Uri.fromParts("package", context.packageName, null)
         intent.data = uri
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
-        context.startActivity(intent)
+        (context as Activity).startActivityForResult(intent, Constants.APP_SETTING_REQUEST)
     }
 
     fun getSharePrefString(context: Context, key: String): String {

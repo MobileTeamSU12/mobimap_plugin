@@ -86,8 +86,9 @@ class _MyAppState extends State<MyApp> {
               ),
               TestLabel(
                 label: 'App setting',
-                child: Container(color: Colors.red, child: GestureDetector(onTap: () {
-                  MobiMapPlugin.openAppSetting();
+                child: Container(color: Colors.red, child: GestureDetector(onTap: () async {
+                  await MobiMapPlugin.openAppSetting();
+                  print('await MobiMapPlugin.openAppSetting()');
                 },),),
               ),
               TestLabel(
