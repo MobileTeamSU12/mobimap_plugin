@@ -18,7 +18,7 @@ import FirebaseCore
     var completionCallLocation: ((String) -> ())?
     var completionCallGetPathImage: ((String) -> ())?
     var isSaveImageFunction:Bool = false
-    var controler:FlutterViewController!
+    open var controler:FlutterViewController!
     var chanelEventGPS:FlutterEventChannel!
     var gPSStreamHandler:GPSStreamHandler!
     var chanelEventNetwork:FlutterEventChannel!
@@ -144,7 +144,7 @@ extension AppDelegatePlugin : CLLocationManagerDelegate {
 // MARK: Custom Method
 extension AppDelegatePlugin{
     // MARK: Register Chanel Method
-    private func registerChanelMethod(controler:FlutterViewController) {
+    open func registerChanelMethod(controler:FlutterViewController) {
         let chanelMethod = FlutterMethodChannel(name: ChanelName.method.rawValue, binaryMessenger: controler.binaryMessenger)
         chanelMethod.setMethodCallHandler ({ [self] (call:FlutterMethodCall, result:@escaping FlutterResult) -> Void in
             switch call.method{
@@ -239,7 +239,7 @@ extension AppDelegatePlugin{
         })
     }
     // MARK: Register Event Method
-    private func registerEventMethod(controler:FlutterViewController) {
+    open func registerEventMethod(controler:FlutterViewController) {
         self.chanelEventGPS = FlutterEventChannel(name: ChanelName.eventGPS.rawValue, binaryMessenger: self.controler.binaryMessenger)
         self.gPSStreamHandler = GPSStreamHandler(parentVCtrl: controler)
         self.chanelEventGPS.setStreamHandler(self.gPSStreamHandler)
