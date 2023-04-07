@@ -18,11 +18,13 @@ import FirebaseCore
     var completionCallLocation: ((String) -> ())?
     var completionCallGetPathImage: ((String) -> ())?
     var isSaveImageFunction:Bool = false
-    open var controler:FlutterViewController!
+    open var flutterViewControler:FlutterViewController!
     var chanelEventGPS:FlutterEventChannel!
     var gPSStreamHandler:GPSStreamHandler!
     var chanelEventNetwork:FlutterEventChannel!
+    open var application:UIApplication!
     var networkStreamHandler:NetworkMonitorStreamHandler!
+    open var launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     open var GMSServicesAPIKey:String = ""
     // MARK: Application Life Cycle
     open override func application(
@@ -32,11 +34,15 @@ import FirebaseCore
 //        GMSServices.provideAPIKey("AIzaSyB5GlI1gKmxppYi6MxzJo2AgzyfE5C-6d8")
         GMSServices.provideAPIKey(GMSServicesAPIKey)
         //        GeneratedPluginRegistrant.register(with: self)
-        self.controler = window?.rootViewController as? FlutterViewController
-        self.registerChanelMethod(controler: self.controler)
-        self.registerEventMethod(controler: self.controler)
-        self .registerNotification(application:application)
-        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+        self.application = application;
+        self.launchOptions = launchOptions;
+        if (self.flutterViewControler == nil){
+            self.flutterViewControler = window?.rootViewController as? FlutterViewController
+        }
+        self.registerChanelMethod(controler: self.flutterViewControler)
+        self.registerEventMethod(controler: self.flutterViewControler)
+        self.registerNotification(application:self.application)
+        return super.application(self.application, didFinishLaunchingWithOptions: self.launchOptions)
     }
     
     open override func applicationDidBecomeActive(_ application: UIApplication){
@@ -71,9 +77,9 @@ import FirebaseCore
         return false
     }
     open override func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
-        let controler:FlutterViewController = window?.rootViewController as! FlutterViewController
-        let bateryChanel = FlutterMethodChannel(name: "plugins.flutter.io/quick_actions", binaryMessenger: controler.binaryMessenger)
-        bateryChanel.invokeMethod("launch", arguments: shortcutItem.type)
+//         let controler:FlutterViewController = window?.rootViewController as! FlutterViewController
+//         let bateryChanel = FlutterMethodChannel(name: "plugins.flutter.io/quick_actions", binaryMessenger: controler.binaryMessenger)
+//         bateryChanel.invokeMethod("launch", arguments: shortcutItem.type)
     }
     
     // MARK: push Notification Firebase
@@ -129,7 +135,7 @@ extension AppDelegatePlugin : CLLocationManagerDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
             UserDefaults.standard.setValue("fcmToken", forKey: fcmToken)
     }
-    func registerNotification(application:UIApplication) {
+    public func registerNotification(application:UIApplication) {
         let center = UNUserNotificationCenter.current()
         center.delegate = self;
         center.requestAuthorization(options:[.badge, .alert, .sound]) { (granted, error) in
@@ -144,7 +150,7 @@ extension AppDelegatePlugin : CLLocationManagerDelegate {
 // MARK: Custom Method
 extension AppDelegatePlugin{
     // MARK: Register Chanel Method
-    open func registerChanelMethod(controler:FlutterViewController) {
+    public func registerChanelMethod(controler:FlutterViewController) {
         let chanelMethod = FlutterMethodChannel(name: ChanelName.method.rawValue, binaryMessenger: controler.binaryMessenger)
         chanelMethod.setMethodCallHandler ({ [self] (call:FlutterMethodCall, result:@escaping FlutterResult) -> Void in
             switch call.method{
@@ -218,8 +224,8 @@ extension AppDelegatePlugin{
                 break
             case FunctionName.openAppSetting.rawValue:
 //                guard let param = call.arguments as? [String:AnyObject] else {return}
-//                AppPermission(parentVCtrl: self.controler).presentSettings(message: "Đi đến cài đặt", preferenceType: .allSetting)
-                AppPermission(parentVCtrl: self.controler).gotoAppPrivacySettings(preferenceType: .allSetting)
+//                AppPermission(parentVCtrl: self.flutterViewControler).presentSettings(message: "Đi đến cài đặt", preferenceType: .allSetting)
+                AppPermission(parentVCtrl: self.flutterViewControler).gotoAppPrivacySettings(preferenceType: .allSetting)
                 break
             case FunctionName.getGpsStatus.rawValue:
                 var resultMethod = AppPermission(parentVCtrl: controler).checkGPSStatus()
@@ -240,11 +246,11 @@ extension AppDelegatePlugin{
     }
     // MARK: Register Event Method
     open func registerEventMethod(controler:FlutterViewController) {
-        self.chanelEventGPS = FlutterEventChannel(name: ChanelName.eventGPS.rawValue, binaryMessenger: self.controler.binaryMessenger)
+        self.chanelEventGPS = FlutterEventChannel(name: ChanelName.eventGPS.rawValue, binaryMessenger: self.flutterViewControler.binaryMessenger)
         self.gPSStreamHandler = GPSStreamHandler(parentVCtrl: controler)
         self.chanelEventGPS.setStreamHandler(self.gPSStreamHandler)
         
-        self.chanelEventNetwork = FlutterEventChannel(name: ChanelName.eventNetwork.rawValue, binaryMessenger: self.controler.binaryMessenger)
+        self.chanelEventNetwork = FlutterEventChannel(name: ChanelName.eventNetwork.rawValue, binaryMessenger: self.flutterViewControler.binaryMessenger)
         self.networkStreamHandler = NetworkMonitorStreamHandler(parentVCtrl: controler)
         self.chanelEventNetwork.setStreamHandler(self.networkStreamHandler)
     }
