@@ -12,14 +12,16 @@ public class MobimapPlugin: NSObject, FlutterPlugin,FlutterStreamHandler {
         //    let eventNetworkChannel = FlutterEventChannel(name: ChanelName.eventNetwork.rawValue, binaryMessenger: registrar.messenger())
         //    eventNetworkChannel.setStreamHandler(instance)
     }
-    
-    public static func register(_ application: UIApplication,
-                                didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?,futterViewControler:FlutterViewController!) {
-        var appDelegatePlugin:AppDelegatePlugin = AppDelegatePlugin();
-        appDelegatePlugin.application = application;
-        appDelegatePlugin.flutterViewControler = futterViewControler;
-        appDelegatePlugin.launchOptions = launchOptions
-        appDelegatePlugin.application(application, didFinishLaunchingWithOptions: launchOptions)
+    @objc public static func register(with registrar: FlutterPluginRegistrar ,_ application: UIApplication,
+                                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?,futterViewControler:FlutterViewController!) {
+            var appDelegatePlugin:AppDelegatePlugin = AppDelegatePlugin();
+            appDelegatePlugin.application = application;
+            appDelegatePlugin.flutterViewControler = futterViewControler;
+            appDelegatePlugin.launchOptions = launchOptions
+            appDelegatePlugin.registerChanelMethod(controler: appDelegatePlugin.flutterViewControler)
+            appDelegatePlugin.registerEventMethod(controler: appDelegatePlugin.flutterViewControler)
+            appDelegatePlugin.registerNotification(application:appDelegatePlugin.application)
+    //        appDelegatePlugin.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         result("iOS " + UIDevice.current.systemVersion)
