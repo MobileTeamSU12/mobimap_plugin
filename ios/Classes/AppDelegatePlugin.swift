@@ -150,99 +150,114 @@ extension AppDelegatePlugin : CLLocationManagerDelegate {
 }
 // MARK: Custom Method
 extension AppDelegatePlugin{
-    // MARK: Register Chanel Method
-    public func registerChanelMethod(controler:FlutterViewController) {
-        let chanelMethod = FlutterMethodChannel(name: ChanelName.method.rawValue, binaryMessenger: controler.binaryMessenger)
-        chanelMethod.setMethodCallHandler ({ [self] (call:FlutterMethodCall, result:@escaping FlutterResult) -> Void in
-            switch call.method{
-            case FunctionName.getBatteryLevel.rawValue:
-                let num = self.betteryLevel()
-                result(String(num))
-                break
-            case FunctionName.getImei.rawValue:
-                let ime = self.getImei()
-                result(ime)
-                break
-            case FunctionName.getOperatingSystemVersion.rawValue:
-                let version = self.getSystemVersion()
-                result(version)
-                break
-            case FunctionName.takePhoto.rawValue:
-                guard let param = call.arguments as? [String:AnyObject] else {return}
-                drawText = param[FunctionParameters.drawText.rawValue] as? NSArray ?? []
-                filename = param[FunctionParameters.fileName.rawValue] as? String ?? ""
-                self.pickerCamera(controler: controler) { str in
-                    print(str)
-                    result(str)
-                }
-                break
-            case FunctionName.requestPermission.rawValue:
-                guard let param = call.arguments as? [String:String] else {return}
-                let permistionRequest:String = param[FunctionParameters.permissionRequest.rawValue] ?? ""
+    public func chanelMethodCallHandler(controler:FlutterViewController,call:FlutterMethodCall, result:@escaping FlutterResult){
+        switch call.method{
+        case FunctionName.getBatteryLevel.rawValue:
+            let num = self.betteryLevel()
+            result(String(num))
+            break
+        case FunctionName.getImei.rawValue:
+            let ime = self.getImei()
+            result(ime)
+            break
+        case FunctionName.getOperatingSystemVersion.rawValue:
+            let version = self.getSystemVersion()
+            result(version)
+            break
+        case FunctionName.takePhoto.rawValue:
+            guard let param = call.arguments as? [String:AnyObject] else {return}
+            drawText = param[FunctionParameters.drawText.rawValue] as? NSArray ?? []
+            filename = param[FunctionParameters.fileName.rawValue] as? String ?? ""
+            self.pickerCamera(controler: controler) { str in
+                print(str)
+                result(str)
+            }
+            break
+        case FunctionName.requestPermission.rawValue:
+            guard let param = call.arguments as? [String:String] else {return}
+            let permistionRequest:String = param[FunctionParameters.permissionRequest.rawValue] ?? ""
 //                var resultMethod = self.requestPermission(controler: controler,permistionRequest: permistionRequest.uppercased())
 //                result(resultMethod.mes)
-                self.requestPermission(controler: controler, permistionRequest: permistionRequest) { status, mes in
-                    result(status)
-                }
-                break
-            case FunctionName.openGPSSetting.rawValue:
-                let url = URL.init(string: UIApplication.openSettingsURLString)
-                UIApplication.shared .openURL(url!)
-                break
-            case FunctionName.updateAppVersion.rawValue:
-                guard let param = call.arguments as? [String:String] else {return}
-                let linkDownload:String = param[FunctionParameters.filePath.rawValue] ?? ""
-                guard let url = URL(string: linkDownload) else {
-                  return //be safe
-                }
-                UIApplication.shared.openURL(url)
-                break;
-            case FunctionName.getLocation.rawValue:
-                self.getLocation(controler: controler, completion: { str in
-                    result(str)
-                })
-                break
-            case FunctionName.getImageFromGallery.rawValue:
-                self.pickerPhotoLibrary(controler: controler) { str in
-                    print(str)
-                    result(str)
-                }
-                break
-            case FunctionName.getInternetConnection.rawValue:
-                var resultMethod = AppPermission(parentVCtrl: controler).checkInternetConnection()
-                result(resultMethod.status)
-                break
-            case FunctionName.saveImageToGallery.rawValue:
-                self.isSaveImageFunction = true
-                guard let param = call.arguments as? [String:AnyObject] else {return}
-                let myFlutterData: FlutterStandardTypedData = param[FunctionParameters.fileData.rawValue] as! FlutterStandardTypedData
-                let myData = Data(myFlutterData.data)
-                let Image:UIImage = UIImage(data: myData)!
-                self.filename = param[FunctionParameters.fileName.rawValue] as? String ?? ""
-                self.saveImageToGallery(image: Image) { str in
-                    result(str)
-                }
-                break
-            case FunctionName.openAppSetting.rawValue:
+            self.requestPermission(controler: controler, permistionRequest: permistionRequest) { status, mes in
+                result(status)
+            }
+            break
+        case FunctionName.openGPSSetting.rawValue:
+            let url = URL.init(string: UIApplication.openSettingsURLString)
+            UIApplication.shared .openURL(url!)
+            break
+        case FunctionName.updateAppVersion.rawValue:
+            guard let param = call.arguments as? [String:String] else {return}
+            let linkDownload:String = param[FunctionParameters.filePath.rawValue] ?? ""
+            guard let url = URL(string: linkDownload) else {
+              return //be safe
+            }
+            UIApplication.shared.openURL(url)
+            break;
+        case FunctionName.getLocation.rawValue:
+            self.getLocation(controler: controler, completion: { str in
+                result(str)
+            })
+            break
+        case FunctionName.getImageFromGallery.rawValue:
+            self.pickerPhotoLibrary(controler: controler) { str in
+                print(str)
+                result(str)
+            }
+            break
+        case FunctionName.getInternetConnection.rawValue:
+            var resultMethod = AppPermission(parentVCtrl: controler).checkInternetConnection()
+            result(resultMethod.status)
+            break
+        case FunctionName.saveImageToGallery.rawValue:
+            self.isSaveImageFunction = true
+            guard let param = call.arguments as? [String:AnyObject] else {return}
+            let myFlutterData: FlutterStandardTypedData = param[FunctionParameters.fileData.rawValue] as! FlutterStandardTypedData
+            let myData = Data(myFlutterData.data)
+            let Image:UIImage = UIImage(data: myData)!
+            self.filename = param[FunctionParameters.fileName.rawValue] as? String ?? ""
+            self.saveImageToGallery(image: Image) { str in
+                result(str)
+            }
+            break
+        case FunctionName.openAppSetting.rawValue:
 //                guard let param = call.arguments as? [String:AnyObject] else {return}
 //                AppPermission(parentVCtrl: self.flutterViewControler).presentSettings(message: "Đi đến cài đặt", preferenceType: .allSetting)
-                AppPermission(parentVCtrl: self.flutterViewControler).gotoAppPrivacySettings(preferenceType: .allSetting)
-                break
-            case FunctionName.getGpsStatus.rawValue:
-                var resultMethod = AppPermission(parentVCtrl: controler).checkGPSStatus()
+            AppPermission(parentVCtrl: self.flutterViewControler).gotoAppPrivacySettings(preferenceType: .allSetting)
+            break
+        case FunctionName.getGpsStatus.rawValue:
+            var resultMethod = AppPermission(parentVCtrl: controler).checkGPSStatus()
+            if (resultMethod.status){
                 result(resultMethod.status)
-                break
-            case FunctionName.getVersionApp.rawValue:
-                let version = self.getAppVersion()
-                result(version)
-                break
-            case FunctionName.getHashCommit.rawValue:
-                let hasCommit = self.getHasCommit()
-                result(hasCommit)
-                break
-            default:
-                break
+            } else {
+                self.startStandardUpdates()
+                AppPermission(parentVCtrl: controler).requestGPSPermission(completion: { status, str in
+                    result(status)
+                })
             }
+            break
+        case FunctionName.getVersionApp.rawValue:
+            let version = self.getAppVersion()
+            result(version)
+            break
+        case FunctionName.getHashCommit.rawValue:
+            let hasCommit = self.getHasCommit()
+            result(hasCommit)
+            break
+        default:
+            break
+        }
+    }
+    // MARK: Register Chanel Method
+    public func createChanelMethod(controler:FlutterViewController) -> FlutterMethodChannel{
+        let chanelMethod = FlutterMethodChannel(name: ChanelName.method.rawValue, binaryMessenger: controler.binaryMessenger)
+        return chanelMethod
+    }
+    // MARK: Register Chanel Method
+    public func registerChanelMethod(controler:FlutterViewController) {
+        let chanelMethod = self.createChanelMethod(controler: controler)
+        chanelMethod.setMethodCallHandler ({ [self] (call:FlutterMethodCall, result:@escaping FlutterResult) -> Void in
+            self.chanelMethodCallHandler(controler: controler, call: call, result: result)
         })
     }
     // MARK: Register Event Method
@@ -250,7 +265,7 @@ extension AppDelegatePlugin{
         self.chanelEventGPS = FlutterEventChannel(name: ChanelName.eventGPS.rawValue, binaryMessenger: self.flutterViewControler.binaryMessenger)
         self.gPSStreamHandler = GPSStreamHandler(parentVCtrl: controler)
         self.chanelEventGPS.setStreamHandler(self.gPSStreamHandler)
-        
+
         self.chanelEventNetwork = FlutterEventChannel(name: ChanelName.eventNetwork.rawValue, binaryMessenger: self.flutterViewControler.binaryMessenger)
         self.networkStreamHandler = NetworkMonitorStreamHandler(parentVCtrl: controler)
         self.chanelEventNetwork.setStreamHandler(self.networkStreamHandler)
@@ -279,7 +294,7 @@ extension AppDelegatePlugin{
         let str = AppInfo().version
         return str
     }
-    
+
     // MARK: getHasCommit
     private func getHasCommit()-> String{
         let str = AppInfo().commitID
@@ -299,7 +314,7 @@ extension AppDelegatePlugin{
         self.completionCallGetPathImage = completion
         controler.present(vc, animated: true)
     }
-    
+
     // MARK: pickerPhotoLibrary
     private func pickerPhotoLibrary(controler:FlutterViewController,completion: ((String) -> ())? = nil ) {
         let vc = UIImagePickerController()
@@ -340,7 +355,7 @@ extension AppDelegatePlugin{
             }
         }
     }
-    
+
     func saveImageToGallery(image:UIImage,completion: ((String) -> ())? = nil) {
         self.completionCallGetPathImage = completion
         FMapHelperPlugin.saveImage(withFileName: self.filename, image: image) { isComplete in
@@ -351,7 +366,7 @@ extension AppDelegatePlugin{
             }
         }
     }
-    
+
     func getAssetUrl(mPhasset : PHAsset, completionHandler : @escaping((_ responseURL : NSURL?) -> Void)){
         if mPhasset.mediaType == .image {
             let options: PHContentEditingInputRequestOptions = PHContentEditingInputRequestOptions()
@@ -380,14 +395,14 @@ extension AppDelegatePlugin{
             }
         }
     }
-    
+
     func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!){
         picker.dismiss(animated: true, completion: { () -> Void in
-            
+
         })
     }
-    
-   
+
+
     // MARK: Check all Permistion
     private func requestPermission(controler:FlutterViewController,permistionRequest : String ) ->(status:Bool,mes:String) {
         let permistion = AppPermission(parentVCtrl: controler)
@@ -426,13 +441,13 @@ extension AppDelegatePlugin{
         }
         return flag
     }
-    
+
     func startStandardUpdates () {
         if (locationManager == nil) {
             locationManager = CLLocationManager.init()
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
-            locationManager.requestWhenInUseAuthorization()
+//            locationManager.requestWhenInUseAuthorization()
             locationManager.requestAlwaysAuthorization()
             locationManager.startUpdatingLocation()
         }
@@ -507,4 +522,3 @@ extension AppDelegatePlugin{
         }
     }
 }
-

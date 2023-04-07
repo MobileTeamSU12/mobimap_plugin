@@ -2,20 +2,35 @@ import Flutter
 import UIKit
 
 public class MobimapPlugin: NSObject, FlutterPlugin,FlutterStreamHandler {
+    @objc public static var application:UIApplication!
+    @objc public static var launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    @objc public static var flutterViewControler:FlutterViewController!
+    @objc public static var GMSServicesAPIKey:String = ""
     var sink: FlutterEventSink?
+    var mobimapPluginDelegate:AppDelegatePlugin
+    public override init() {
+
+        mobimapPluginDelegate = AppDelegatePlugin();
+        mobimapPluginDelegate.application = MobimapPlugin.application
+        mobimapPluginDelegate.launchOptions = MobimapPlugin.launchOptions
+        mobimapPluginDelegate.flutterViewControler = MobimapPlugin.flutterViewControler
+        mobimapPluginDelegate.GMSServicesAPIKey = MobimapPlugin.GMSServicesAPIKey
+//        mobimapPluginDelegate.application(MobimapPlugin.application, didFinishLaunchingWithOptions:MobimapPlugin.launchOptions)
+    }
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: ChanelName.method.rawValue, binaryMessenger: registrar.messenger())
         let instance = MobimapPlugin()
+        let channel = instance.mobimapPluginDelegate.createChanelMethod(controler: MobimapPlugin.flutterViewControler)
         registrar.addMethodCallDelegate(instance, channel: channel)
-        let eventGPSChannel = FlutterEventChannel(name: ChanelName.eventGPS.rawValue, binaryMessenger: registrar.messenger())
-        eventGPSChannel.setStreamHandler(instance)
-        let eventNetworkChannel = FlutterEventChannel(name: ChanelName.eventNetwork.rawValue, binaryMessenger: registrar.messenger())
-        eventNetworkChannel.setStreamHandler(instance)
+//        let eventGPSChannel = FlutterEventChannel(name: ChanelName.eventGPS.rawValue, binaryMessenger: registrar.messenger())
+//        eventGPSChannel.setStreamHandler(instance)
+//        let eventNetworkChannel = FlutterEventChannel(name: ChanelName.eventNetwork.rawValue, binaryMessenger: registrar.messenger())
+//        eventNetworkChannel.setStreamHandler(instance)
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         var a = call.method
         print("FlutterMethodCall_".appending(a))
+        self.mobimapPluginDelegate.chanelMethodCallHandler(controler: self.mobimapPluginDelegate.flutterViewControler, call: call, result: result)
 //        result("iOS " + UIDevice.current.systemVersion)
     }
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
