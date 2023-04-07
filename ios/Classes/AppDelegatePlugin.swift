@@ -18,14 +18,15 @@ import FirebaseCore
     var completionCallLocation: ((String) -> ())?
     var completionCallGetPathImage: ((String) -> ())?
     var isSaveImageFunction:Bool = false
-    open var flutterViewControler:FlutterViewController!
     var chanelEventGPS:FlutterEventChannel!
     var gPSStreamHandler:GPSStreamHandler!
     var chanelEventNetwork:FlutterEventChannel!
-    open var application:UIApplication!
+
     var networkStreamHandler:NetworkMonitorStreamHandler!
-    open var launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-    open var GMSServicesAPIKey:String = ""
+    @objc open var application:UIApplication!
+    @objc open var launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    @objc open var flutterViewControler:FlutterViewController!
+    @objc open var GMSServicesAPIKey:String = ""
     // MARK: Application Life Cycle
     open override func application(
         _ application: UIApplication,
