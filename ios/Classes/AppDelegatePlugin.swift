@@ -246,7 +246,7 @@ extension AppDelegatePlugin{
         })
     }
     // MARK: Register Event Method
-    open func registerEventMethod(controler:FlutterViewController) {
+    public func registerEventMethod(controler:FlutterViewController) {
         self.chanelEventGPS = FlutterEventChannel(name: ChanelName.eventGPS.rawValue, binaryMessenger: self.flutterViewControler.binaryMessenger)
         self.gPSStreamHandler = GPSStreamHandler(parentVCtrl: controler)
         self.chanelEventGPS.setStreamHandler(self.gPSStreamHandler)
