@@ -1,7 +1,7 @@
 import Flutter
 import UIKit
 
-public class MobimapPlugin: NSObject, FlutterPlugin,FlutterStreamHandler {
+public class MobimapPlugin: NSObject, FlutterPlugin {
     @objc public static var application:UIApplication!
     @objc public static var launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     @objc public static var flutterViewControler:FlutterViewController!
@@ -21,10 +21,12 @@ public class MobimapPlugin: NSObject, FlutterPlugin,FlutterStreamHandler {
         let instance = MobimapPlugin()
         let channel = instance.mobimapPluginDelegate.createChanelMethod(controler: MobimapPlugin.flutterViewControler)
         registrar.addMethodCallDelegate(instance, channel: channel)
-//        let eventGPSChannel = FlutterEventChannel(name: ChanelName.eventGPS.rawValue, binaryMessenger: registrar.messenger())
-//        eventGPSChannel.setStreamHandler(instance)
-//        let eventNetworkChannel = FlutterEventChannel(name: ChanelName.eventNetwork.rawValue, binaryMessenger: registrar.messenger())
-//        eventNetworkChannel.setStreamHandler(instance)
+        let eventGPSChannel = FlutterEventChannel(name: ChanelName.eventGPS.rawValue, binaryMessenger: registrar.messenger())
+        let gPSStreamHandler:GPSStreamHandler = GPSStreamHandler(parentVCtrl: MobimapPlugin.flutterViewControler)
+        eventGPSChannel.setStreamHandler(gPSStreamHandler)
+        let eventNetworkChannel = FlutterEventChannel(name: ChanelName.eventNetwork.rawValue, binaryMessenger: registrar.messenger())
+        let networkMonitorStreamHandler:NetworkMonitorStreamHandler = NetworkMonitorStreamHandler(parentVCtrl: MobimapPlugin.flutterViewControler)
+        eventGPSChannel.setStreamHandler(networkMonitorStreamHandler)
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -33,13 +35,13 @@ public class MobimapPlugin: NSObject, FlutterPlugin,FlutterStreamHandler {
         self.mobimapPluginDelegate.chanelMethodCallHandler(controler: self.mobimapPluginDelegate.flutterViewControler, call: call, result: result)
 //        result("iOS " + UIDevice.current.systemVersion)
     }
-    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
-        self.sink = events
-        return nil
-    }
-    
-    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
-        self.sink = nil
-        return nil
-    }
+//    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+//        self.sink = events
+//        return nil
+//    }
+//
+//    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+//        self.sink = nil
+//        return nil
+//    }
 }
