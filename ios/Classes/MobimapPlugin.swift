@@ -6,6 +6,8 @@ public class MobimapPlugin: NSObject, FlutterPlugin {
     @objc public static var launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     @objc public static var flutterViewControler:FlutterViewController!
     @objc public static var GMSServicesAPIKey:String = ""
+    @objc public static var networkMonitorStreamHandler:NetworkMonitorStreamHandler!
+    @objc public static var gPSStreamHandler:GPSStreamHandler!
     var sink: FlutterEventSink?
     var mobimapPluginDelegate:AppDelegatePlugin
     public override init() {
@@ -22,11 +24,11 @@ public class MobimapPlugin: NSObject, FlutterPlugin {
         let channel = instance.mobimapPluginDelegate.createChanelMethod(controler: MobimapPlugin.flutterViewControler)
         registrar.addMethodCallDelegate(instance, channel: channel)
         let eventGPSChannel = FlutterEventChannel(name: ChanelName.eventGPS.rawValue, binaryMessenger: registrar.messenger())
-        let gPSStreamHandler:GPSStreamHandler = GPSStreamHandler(parentVCtrl: MobimapPlugin.flutterViewControler)
-        eventGPSChannel.setStreamHandler(gPSStreamHandler)
+        MobimapPlugin.gPSStreamHandler = GPSStreamHandler(parentVCtrl: MobimapPlugin.flutterViewControler)
+        eventGPSChannel.setStreamHandler(MobimapPlugin.gPSStreamHandler)
         let eventNetworkChannel = FlutterEventChannel(name: ChanelName.eventNetwork.rawValue, binaryMessenger: registrar.messenger())
-        let networkMonitorStreamHandler:NetworkMonitorStreamHandler = NetworkMonitorStreamHandler(parentVCtrl: MobimapPlugin.flutterViewControler)
-        eventGPSChannel.setStreamHandler(networkMonitorStreamHandler)
+        MobimapPlugin.networkMonitorStreamHandler = NetworkMonitorStreamHandler(parentVCtrl: MobimapPlugin.flutterViewControler)
+        eventGPSChannel.setStreamHandler(MobimapPlugin.networkMonitorStreamHandler)
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
