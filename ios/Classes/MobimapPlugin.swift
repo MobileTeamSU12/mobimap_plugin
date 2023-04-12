@@ -28,7 +28,7 @@ public class MobimapPlugin: NSObject, FlutterPlugin {
         eventGPSChannel.setStreamHandler(MobimapPlugin.gPSStreamHandler)
         let eventNetworkChannel = FlutterEventChannel(name: ChanelName.eventNetwork.rawValue, binaryMessenger: registrar.messenger())
         MobimapPlugin.networkMonitorStreamHandler = NetworkMonitorStreamHandler(parentVCtrl: MobimapPlugin.flutterViewControler)
-        eventGPSChannel.setStreamHandler(MobimapPlugin.networkMonitorStreamHandler)
+        eventNetworkChannel.setStreamHandler(MobimapPlugin.networkMonitorStreamHandler)
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
