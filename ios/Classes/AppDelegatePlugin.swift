@@ -32,9 +32,12 @@ import FirebaseCore
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+         if (MobimapPlugin.GMSServicesAPIKey.isEmpty){
+            GMSServicesAPIKey = "AIzaSyB5GlI1gKmxppYi6MxzJo2AgzyfE5C-6d8"
+            MobimapPlugin.GMSServicesAPIKey = GMSServicesAPIKey
+        }
 //        GMSServices.provideAPIKey("AIzaSyB5GlI1gKmxppYi6MxzJo2AgzyfE5C-6d8")
         GMSServices.provideAPIKey(GMSServicesAPIKey)
-        //        GeneratedPluginRegistrant.register(with: self)
         self.application = application;
         self.launchOptions = launchOptions;
         if (self.flutterViewControler == nil){
