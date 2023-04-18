@@ -1,20 +1,24 @@
 # mobimap_plugin
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
-
-For help getting started with Flutter development, view the
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-## Getting Started cấu hình lấy tất cả các thư viện dùng cho Plugin
-Path : ios/mobimap_plugin.podspec
-s.dependency  'Flutter' //thư viện cần dùng
-s.dependency 'GoogleMaps' // thư viện cần dùng
+## IOS note
++  Hiện tại **Plugin** được gắn vào **Module**. Những thư viện được khai báo trong file `.yaml` ở **Module** và có sử dụng ở **Plugin** thì cần phải khai báo trong file `./ios/mobimap_plugin.podspec`
++ Những thư viện cần cho native cũng được khai báo ở file `./ios/mobimap_plugin.podspec`
+```
+Pod::Spec.new do |s|
+...
+  s.dependency 'Flutter'
+  s.dependency 'GoogleMaps'
+  s.dependency 'ReachabilitySwift'
+  s.dependency 'flutter_local_notifications'
+  s.dependency 'FirebaseMessaging'
+  s.dependency 'Firebase'
+  s.dependency 'Firebase/Core'
+  s.dependency 'firebase_core'
+  s.dependency 'Firebase/Crashlytics'
+  s.dependency 'Firebase/CoreOnly'
+...
+end
+```
++ s.dependency  'Flutter' //thư viện cần dùng
++ s.dependency 'GoogleMaps' // thư viện cần dùng
 
