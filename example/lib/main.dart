@@ -142,6 +142,12 @@ class _MyAppState extends State<MyApp> {
                   future: MobiMapGPSPlugin.getGpsStatus(),
                 ),
               ),
+              TestLabel(
+                label: 'launch url',
+                child: Container(color: Colors.red, child: GestureDetector(onTap: () async {
+                  MobiMapPlugin.launchBrowser('http://docs.google.com/viewer?url=https://istorage.fpt.vn/v2/big-upload/istorage/Map/1/202304/doc/Map_1682414322202_e355b11bd117658fc090b1c5abecaa9a_780965.pdf');
+                },),),
+              ),
             ],
           ),
         ),

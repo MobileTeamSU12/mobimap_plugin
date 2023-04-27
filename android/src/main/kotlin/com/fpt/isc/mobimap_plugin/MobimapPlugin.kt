@@ -1,6 +1,7 @@
 package com.fpt.isc.mobimap_plugin
 
 import android.app.Activity
+import android.net.Uri
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Context.LOCATION_SERVICE
@@ -175,6 +176,15 @@ class MobimapPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 Constants.HASH_COMMIT -> {
 //                    result.success(BuildConfig.VERSION_HASH)
                     result.success("Not implement yet")
+                }
+                Constants.LAUNCH_BROWSER -> {
+                    val url: String = call.argument(Constants.URL_DATA_ARGUMENT) ?: "http://google.com"
+
+                    val intent: Intent = Intent(Intent.ACTION_VIEW)
+                    intent.setDataAndType(Uri.parse(url), "text/html")
+
+                    activity.startActivity(intent)
+//                    result.success("Success $url")
                 }
                 else -> {
                     result.notImplemented()

@@ -29,6 +29,7 @@ class Constants {
         const val GET_GPS_STATUS: String = "getGpsStatus"
         const val VERSION_APP: String = "getVersionApp"
         const val HASH_COMMIT: String = "getHashCommit"
+        const val LAUNCH_BROWSER: String = "launchBrowser"
 
         /**
          * Argument Name
@@ -37,7 +38,8 @@ class Constants {
         const val FILE_PATH_ARGUMENT: String = "filePath"
         const val FILE_NAME_ARGUMENT: String = "fileName"
         const val FILE_DATA_ARGUMENT: String = "fileData"
-	const val PERMISSIONS_REQUEST_ARGUMENT: String = "permissionType"
+        const val URL_DATA_ARGUMENT: String = "url"
+	    const val PERMISSIONS_REQUEST_ARGUMENT: String = "permissionType"
         /**
          * Event channel Name
          */

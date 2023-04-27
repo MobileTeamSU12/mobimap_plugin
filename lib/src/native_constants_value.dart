@@ -18,6 +18,7 @@ class NativeChanel{
 }
 
 class NativeFunction{
+
   NativeFunction._();
 
   static const String getLocation = 'getLocation';
@@ -34,6 +35,7 @@ class NativeFunction{
   static const String getGpsStatus = 'getGpsStatus';
   static const String getVersionApp = 'getVersionApp';
   static const String getHashCommit = 'getHashCommit';
+  static const String launchBrowser = 'launchBrowser';
 
   ///Đang xem xét
   static const String saveImageToGallery = 'saveImageToGallery';
@@ -50,4 +52,5 @@ class NativeArgument{
   static const String drawText = 'drawText';
   static const String fileData = 'fileData';
   static const String permissionType = 'permissionType';
+  static const String url = 'url';
 }

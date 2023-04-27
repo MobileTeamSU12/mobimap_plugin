@@ -49,4 +49,10 @@ class MobiMapPlugin{
       onReceiveData(status);
     });
   }
+
+  static Future<void> launchBrowser (String url) async {
+    return await NativeChannelHandler.call(function: NativeFunction.launchBrowser, arguments: {
+      NativeArgument.url: url,
+    });
+  }
 }
