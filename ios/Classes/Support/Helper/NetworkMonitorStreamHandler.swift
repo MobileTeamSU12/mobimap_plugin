@@ -21,7 +21,7 @@ open class NetworkMonitorStreamHandler:NSObject, FlutterStreamHandler{
 //        self.sendNetworkStatus()
         return nil
     }
-    @objc func sendNetworkStatus() {
+    @objc public func sendNetworkStatus() {
         guard let sink = sink else { return }
 //        let check =  AppPermission(parentVCtrl: self.parentVCtrl).checkInternetConnectionStatus()
         AppPermission(parentVCtrl: self.parentVCtrl).checkInternetConnectionStatus { (status, mes) in

@@ -20,7 +20,7 @@ open class GPSStreamHandler:NSObject, FlutterStreamHandler{
         return nil
     }
     
-    @objc func sendGPSStatus() {
+    @objc public func sendGPSStatus() {
         guard let sink = self.sink else { return }
         AppPermission(parentVCtrl: self.parentVCtrl).requestGPSPermission { status, mes in
             sink(status)
