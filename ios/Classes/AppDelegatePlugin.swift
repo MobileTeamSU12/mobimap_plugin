@@ -195,10 +195,14 @@ extension AppDelegatePlugin{
             guard let url = URL(string: linkDownload) else {
               return //be safe
             }
+            
             UIApplication.shared.openURL(url)
             break;
         case FunctionName.getLocation.rawValue:
             self.getLocation(controler: controler, completion: { str in
+//                var dict = [String: String]()
+//                dict["status"] = "aaaaaa"
+//                dict["mes"] = "xyz"
                 result(str)
             })
             break
