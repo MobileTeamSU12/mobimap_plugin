@@ -76,4 +76,5 @@ class NativeArgument{
   static const String resolution = 'resolution';
   static const String workPath = 'workPath';
   static const String isAutoCut = 'isAutoCut';
+  static const String numCopies = 'numCopies';
 }
