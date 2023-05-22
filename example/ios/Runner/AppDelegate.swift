@@ -9,6 +9,8 @@ import mobimap_plugin
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
       self.GMSServicesAPIKey = "AIzaSyB5GlI1gKmxppYi6MxzJo2AgzyfE5C-6d8"
+      self.flutterViewControler = window?.rootViewController as? FlutterViewController
+      MobimapPlugin.flutterViewControler = self.flutterViewControler
       GeneratedPluginRegistrant.register(with: self)
       return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

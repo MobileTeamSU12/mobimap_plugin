@@ -83,6 +83,10 @@ enum FunctionName:String{
     case getGpsStatus = "getGpsStatus"
     case getVersionApp = "getVersionApp"
     case getHashCommit = "getHashCommit"
+    case checkConnnecPrinterWifi = "checkConnnecPrinterWifi"
+    case connectChannelPrinter = "connectChannelPrinter"
+    case connectWifiPrinter = "connectWifiPrinter"
+    
 }
 enum FunctionParameters:String{
     case id = "id"
@@ -91,4 +95,9 @@ enum FunctionParameters:String{
     case filePath = "filePath"
     case drawText = "drawText"
     case permissionRequest = "permissionType"
+    case printerModelName = "printerModelName"
+    case printerModel = "printerModel"
+    case printerSSID = "printerSSID"
+    case printerPass = "printerPass"
+    case printerIPAddess = "printerIPAddess"
 }

@@ -35,7 +35,7 @@ public class MobimapPlugin: NSObject, FlutterPlugin {
         var a = call.method
         print("FlutterMethodCall_".appending(a))
         self.mobimapPluginDelegate.chanelMethodCallHandler(controler: self.mobimapPluginDelegate.flutterViewControler, call: call, result: result)
-//        result("iOS " + UIDevice.current.systemVersion)
+        //        result("iOS " + UIDevice.current.systemVersion)
     }
 //    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
 //        self.sink = events

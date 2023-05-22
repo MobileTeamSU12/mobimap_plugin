@@ -21,12 +21,16 @@ import FirebaseCore
     var chanelEventGPS:FlutterEventChannel!
     var gPSStreamHandler:GPSStreamHandler!
     var chanelEventNetwork:FlutterEventChannel!
-
+    var printerKitControler:BRLMPrinterKitControler!
+    var printerSettingUser:PrinterSettingUser? = nil
+    
+    
     var networkStreamHandler:NetworkMonitorStreamHandler!
     @objc open var application:UIApplication!
     @objc open var launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     @objc open var flutterViewControler:FlutterViewController!
     @objc open var GMSServicesAPIKey:String = ""
+  
     // MARK: Application Life Cycle
     open override func application(
         _ application: UIApplication,
@@ -43,6 +47,7 @@ import FirebaseCore
         if (self.flutterViewControler == nil){
             self.flutterViewControler = window?.rootViewController as? FlutterViewController
         }
+        self.printerKitControler = BRLMPrinterKitControler()
         self.registerChanelMethod(controler: self.flutterViewControler)
         self.registerEventMethod(controler: self.flutterViewControler)
         self.registerNotification(application:self.application)
@@ -153,6 +158,7 @@ extension AppDelegatePlugin : CLLocationManagerDelegate {
 }
 // MARK: Custom Method
 extension AppDelegatePlugin{
+    
     public func chanelMethodCallHandler(controler:FlutterViewController,call:FlutterMethodCall, result:@escaping FlutterResult){
         switch call.method{
         case FunctionName.getBatteryLevel.rawValue:
@@ -250,6 +256,83 @@ extension AppDelegatePlugin{
         case FunctionName.getHashCommit.rawValue:
             let hasCommit = self.getHasCommit()
             result(hasCommit)
+            break
+        case FunctionName.checkConnnecPrinterWifi.rawValue:
+            guard let param = call.arguments as? [String:AnyObject] else {return}
+            let printerModel = param[FunctionParameters.printerModel.rawValue] as? String ?? ""
+            let printerSSID = param[FunctionParameters.printerSSID.rawValue] as? String ?? ""
+            let printerPass = param[FunctionParameters.printerPass.rawValue] as? String ?? ""
+            let printerIPAddess = param[FunctionParameters.printerIPAddess.rawValue] as? String ?? ""
+            self.printerSettingUser = PrinterSettingUser();
+            self.printerSettingUser!.priterWifiSSID = printerSSID
+            self.printerSettingUser!.priterModel = Int(printerModel)
+            self.printerSettingUser!.priterWifiPass = printerPass
+            self.printerSettingUser!.priterWifiIP = printerIPAddess
+            self.printerSettingUser?.setPrintInfoSettingDefault(printerSettingUser!)
+            self.printerKitControler.viewDidLoad()
+            self.printerKitControler.checkConnectWifiWith() { status,mes, userInfoPrinter in
+                var agrResult = [String:AnyObject]()
+                agrResult["status"] = status as AnyObject
+                agrResult["mes"] = mes as AnyObject
+                print(agrResult)
+                if (!status){
+                    self.printerKitControler.connectionWifi(ssid: userInfoPrinter!.priterWifiSSID! , pass: userInfoPrinter!.priterWifiPass!) { status in
+                        agrResult["status"] = status as AnyObject
+                        if (status){
+                            agrResult["mes"] = "Kết nối mạng wifi thành công" as AnyObject
+                        } else {
+                            agrResult["mes"] = "Kết nối mạng wifi không thành công" as AnyObject
+                        }
+                        print(agrResult)
+                        result(agrResult)
+                    }
+                } else {
+                    result(agrResult)
+                }
+            }
+            break
+        case FunctionName.connectChannelPrinter.rawValue:
+            guard let param = call.arguments as? [String:AnyObject] else {return}
+            let printerModel = param[FunctionParameters.printerModel.rawValue] as? String ?? ""
+            let printerIPAddess = param[FunctionParameters.printerIPAddess.rawValue] as? String ?? ""
+            self.printerSettingUser = self.printerSettingUser!.getPrintInfoSettingDefault();
+            self.printerSettingUser!.priterModel = Int(printerModel)
+            self.printerSettingUser!.priterWifiIP = printerIPAddess
+            self.printerSettingUser?.setPrintInfoSettingDefault(printerSettingUser!)
+            self.printerKitControler.openChanelPriter(complete: {driver,userInfoPrinter in
+                var agrResult = [String:AnyObject]()
+                if (driver == nil){
+                    agrResult["status"] = false as AnyObject
+                    agrResult["mes"] = "Kết nối kênh máy in thất bại. Kiểm tra lại IP của máy in" as AnyObject
+                    result(agrResult)
+                    print(agrResult)
+                    return
+                }
+                agrResult["status"] = true as AnyObject
+                agrResult["mes"] = "Kết nối kênh máy inthành công" as AnyObject
+                result(agrResult)
+                print(agrResult)
+            })
+            break
+        case FunctionName.connectWifiPrinter.rawValue:
+            guard let param = call.arguments as? [String:AnyObject] else {return}
+            let printerSSID = param[FunctionParameters.printerSSID.rawValue] as? String ?? ""
+            let printerPass = param[FunctionParameters.printerPass.rawValue] as? String ?? ""
+            self.printerSettingUser = self.printerSettingUser!.getPrintInfoSettingDefault();
+            self.printerSettingUser!.priterWifiSSID = printerSSID
+            self.printerSettingUser!.priterWifiPass = printerPass
+            self.printerSettingUser!.setPrintInfoSettingDefault(printerSettingUser!)
+            self.printerKitControler.connectionWifi(ssid: self.printerSettingUser!.priterWifiSSID! , pass: self.printerSettingUser!.priterWifiPass!) { status in
+                var agrResult = [String:AnyObject]()
+                agrResult["status"] = status as AnyObject
+                if (status){
+                    agrResult["mes"] = "Kết nối mạng wifi thành công" as AnyObject
+                } else {
+                    agrResult["mes"] = "Kết nối mạng wifi không thành công" as AnyObject
+                }
+                result(agrResult)
+                print(agrResult)
+            }
             break
         default:
             break

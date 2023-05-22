@@ -41,6 +41,10 @@ class NativeFunction{
   static const String saveImageToGallery = 'saveImageToGallery';
   static const String connectPrinter = 'connectPrinter';
   static const String QRcode = 'QRcode';
+  // Printer
+  static const String checkConnnecPrinterWifi = 'checkConnnecPrinterWifi';
+  static const String connectChannelPrinter = 'connectChannelPrinter';
+  static const String connectWifiPrinter = 'connectWifiPrinter';
 
 }
 
@@ -53,4 +57,9 @@ class NativeArgument{
   static const String fileData = 'fileData';
   static const String permissionType = 'permissionType';
   static const String url = 'url';
+  // For Printer
+  static const String printerModel = 'printerModel';
+  static const String printerSSID = 'printerSSID';
+  static const String printerPass = 'printerPass';
+  static const String printerIPAddess = 'printerIPAddess';
 }

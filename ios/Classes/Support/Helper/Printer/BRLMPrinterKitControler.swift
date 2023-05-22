@@ -12,10 +12,11 @@ import CoreLocation
 import NetworkExtension
 public class BRLMPrinterKitControler: UIViewController {
     
+    var  locationManager:CLLocationManager? = nil
     public override func viewDidLoad() {
         super.viewDidLoad()
-        let locationManager = CLLocationManager()
-        locationManager.requestWhenInUseAuthorization()
+        locationManager = CLLocationManager()
+        locationManager!.requestWhenInUseAuthorization()
         // Do any additional setup after loading the view.
 //        self.ssid = self.getWiFiName() ?? ""
     }
@@ -87,21 +88,34 @@ public class BRLMPrinterKitControler: UIViewController {
     @IBAction  public func Print(_ sender: Any) {
         self.printWithChanel()
     }
+    public func checkConnectWifiWith(complete:@escaping (_ status:Bool,_ mes:String,_ priterSettingUser:PrinterSettingUser?)->()){
+       let priterSettingUser:PrinterSettingUser? = self.getPriterSettingDefault()
+       if ((priterSettingUser != nil)){
+           let wifiInterfaces = self.getWiFiName()
+           if (wifiInterfaces == priterSettingUser!.priterWifiSSID!){
+               complete(true,"Kết nối thành công vào mạng wifi máy in",priterSettingUser)
+           }else {
+               complete(false,"Chọn đúng mạng wifi máy của máy in",priterSettingUser)
+           }
+       } else {
+           complete(false,"Chọn đúng mạng wifi máy của máy in",nil)
+       }
+   }
     
-     public func checkConnectWifi(complete:@escaping (_ status:Bool,_ priterSettingUser:PrinterSettingUser?)->()){
-        let priterSettingUser:PrinterSettingUser? = self.getPriterSettingDefault()
-        if ((priterSettingUser != nil)){
-            let wifiInterfaces = self.getWiFiName()
-            if (wifiInterfaces == priterSettingUser!.priterWifiSSID!){
-                complete(true,priterSettingUser!)
-            }else {
-                complete(false,priterSettingUser!)
-               
-            }
-        } else {
-            complete(false,nil)
+    public func checkConnectWifi(complete:@escaping (_ status:Bool,_ priterSettingUser:PrinterSettingUser?)->()){
+    let priterSettingUser:PrinterSettingUser? = self.getPriterSettingDefault()
+    if ((priterSettingUser != nil)){
+        let wifiInterfaces = self.getWiFiName()
+        if (wifiInterfaces == priterSettingUser!.priterWifiSSID!){
+            complete(true,priterSettingUser!)
+        }else {
+            complete(false,priterSettingUser!)
+
         }
+    } else {
+        complete(false,nil)
     }
+}
     
      public func  getPriterSettingDefault()->PrinterSettingUser{
         var priterSettingUser:PrinterSettingUser = PrinterSettingUser()
