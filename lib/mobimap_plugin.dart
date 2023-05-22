@@ -69,7 +69,7 @@ class MobiMapPlugin {
       NativeArgument.printerModel: printerModel,
       NativeArgument.printerSSID: printerSSID,
       NativeArgument.printerPass: printerPass,
-      NativeArgument.printerIPAddess: printerIPAddess,
+      NativeArgument.printerIPAddress: printerIPAddess,
     };
     return await NativeChannelHandler.call(function: NativeFunction.checkConnnecPrinterWifi, arguments: argPrinterInfo);
   }
@@ -81,7 +81,7 @@ class MobiMapPlugin {
     Map<String, dynamic>? argPrinterInfo = Map<String, dynamic>();
     argPrinterInfo = {
       NativeArgument.printerModel: printerModel,
-      NativeArgument.printerIPAddess: printerIPAddess,
+      NativeArgument.printerIPAddress: printerIPAddess,
     };
     return await NativeChannelHandler.call(function: NativeFunction.connectChannelPrinter, arguments: argPrinterInfo);
   }
@@ -94,28 +94,20 @@ class MobiMapPlugin {
       NativeArgument.printerSSID: printerSSID,
       NativeArgument.printerPass: printerPass,
     };
-    return await NativeChannelHandler.call(function: NativeFunction.connectWifiPrinter, arguments: argPrinterInfo);
-  }
-
-  static Future<void> connectWifiPrinter () async {
-    final result = await NativeChannelHandler.call(function: NativeFunction.connectWifiPrinter, arguments: {
-      NativeArgument.ssidPrinter : "DIRECT-brPT-E550W6809",
-      NativeArgument.passwordPrinter : "00000000",
-    });
+    final result = await NativeChannelHandler.call(function: NativeFunction.connectWifiPrinter, arguments: argPrinterInfo);
     if(result){
-      await MobiMapPlugin.connectChannelPrinter(printerIPAddess: "192.168.118.1", printerModel: "PT_E550W");
+      return await MobiMapPlugin.connectChannelPrinter(printerIPAddess: "192.168.118.1", printerModel: "PT_E550W");
+    }else{
+      return result;
     }
-    print(result);
   }
 
-  // static Future<void> connectChannelPrinter () async {
-  //   final result = await NativeChannelHandler.call(function: NativeFunction.connectChannelPrinter, arguments: {
-  //     NativeArgument.ipPrinter: "192.168.118.1"
-  //   });
-  //   print(result);
-  // }
-
-  static Future<void> printQrCode() async {
+  static Future<void> printQrCode({
+    required int labelSize,
+    required int resolution,
+    required bool isAutoCut,
+    required int numCopies,
+}) async {
     final result = await NativeChannelHandler.call(function: NativeFunction.printQRCode, arguments: {
       NativeArgument.labelSize: 5, // 3: Width12mm, 4: Width18mm, 5: Width24mm(default)
       NativeArgument.resolution: 2, // 0: Low, 1: Normal, 2: High(default)

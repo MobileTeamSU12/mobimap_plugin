@@ -49,9 +49,9 @@ class Constants {
         const val WORK_PATH: String = "workPath"
         const val IS_AUTO_CUT: String = "isAutoCut"
         const val NUM_COPIES: String = "numCopies"
-        const val ssidPrinter:String = "ssidPrinter"
-        const val passwordPrinter:String = "passwordPrinter"
-        const val ipPrinter:String = "ipPrinter"
+        const val ssidPrinter:String = "printerSSID"
+        const val printerPass:String = "printerPass"
+        const val printerIPAddress:String = "printerIPAddress"
 
         /**
          * Event channel Name

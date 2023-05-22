@@ -62,12 +62,7 @@ class NativeArgument{
   static const String printerModel = 'printerModel';
   static const String printerSSID = 'printerSSID';
   static const String printerPass = 'printerPass';
-  static const String printerIPAddess = 'printerIPAddess';
-
-  /// printer connection
-  static const String ssidPrinter = 'ssidPrinter';
-  static const String passwordPrinter = 'passwordPrinter';
-  static const String ipPrinter = 'ipPrinter';
+  static const String printerIPAddress = 'printerIPAddress';
 
   /// printer setting
   static const String labelSize = 'labelSize';

@@ -121,7 +121,7 @@ class _MyAppState extends State<MyApp> {
               TestLabel(
                 label: 'Print QR Code',
                 child: Container(color: Colors.red, child: GestureDetector(onTap: () async{
-                  await MobiMapPlugin.printQrCode();
+                  await MobiMapPlugin.printQrCode(isAutoCut: true, labelSize: 5, numCopies: 1,resolution: 2);
                 },),),
               ),
 
