@@ -24,16 +24,15 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    MobiMapPlugin.listenInternetConnection(onReceiveData: (status) {
-      internet = status;
-      setState(() {
-
-      });
-    },);
+    MobiMapPlugin.listenInternetConnection(
+      onReceiveData: (status) {
+        internet = status;
+        setState(() {});
+      },
+    );
     MobiMapGPSPlugin.listenGPSStatus(onReceiveData: (status) {
       gps = status;
-      setState(() {
-      });
+      setState(() {});
     });
     super.initState();
   }
@@ -86,22 +85,37 @@ class _MyAppState extends State<MyApp> {
               ),
               TestLabel(
                 label: 'App setting',
-                child: Container(color: Colors.red, child: GestureDetector(onTap: () async {
-                  await MobiMapPlugin.openAppSetting();
-                  print('await MobiMapPlugin.openAppSetting()');
-                },),),
+                child: Container(
+                  color: Colors.red,
+                  child: GestureDetector(
+                    onTap: () async {
+                      await MobiMapPlugin.openAppSetting();
+                      print('await MobiMapPlugin.openAppSetting()');
+                    },
+                  ),
+                ),
               ),
               TestLabel(
                 label: 'GPS setting',
-                child: Container(color: Colors.red, child: GestureDetector(onTap: () {
-                  MobiMapGPSPlugin.openGpsSetting();
-                },),),
+                child: Container(
+                  color: Colors.red,
+                  child: GestureDetector(
+                    onTap: () {
+                      MobiMapGPSPlugin.openGpsSetting();
+                    },
+                  ),
+                ),
               ),
               TestLabel(
                 label: 'Permission',
-                child: Container(color: Colors.red, child: GestureDetector(onTap: () async{
-                  print( await MobiMapPlugin.requestPermission(type: 'ALL'));
-                },),),
+                child: Container(
+                  color: Colors.red,
+                  child: GestureDetector(
+                    onTap: () async {
+                      print(await MobiMapPlugin.requestPermission(type: 'ALL'));
+                    },
+                  ),
+                ),
               ),
 
               TestLabel(
@@ -127,18 +141,26 @@ class _MyAppState extends State<MyApp> {
 
               TestLabel(
                 label: 'Take photo',
-                child: Container(color: Colors.red, child: GestureDetector(onTap: () async{
-                  image = await MobiMapImagePlugin.takePhoto(drawText: [], fileName: 'test');
-                  setState(() {
-
-                  });
-                },),),
+                child: Container(
+                  color: Colors.red,
+                  child: GestureDetector(
+                    onTap: () async {
+                      image = await MobiMapImagePlugin.takePhoto(drawText: [], fileName: 'test');
+                      setState(() {});
+                    },
+                  ),
+                ),
               ),
               TestLabel(
                 label: 'Location',
-                child: Container(color: Colors.red, child: GestureDetector(onTap: () async {
-                  print(await MobiMapGPSPlugin.getLocation());
-                },),),
+                child: Container(
+                  color: Colors.red,
+                  child: GestureDetector(
+                    onTap: () async {
+                      print(await MobiMapGPSPlugin.getLocation());
+                    },
+                  ),
+                ),
               ),
               Text(image),
               TestLabel(
@@ -165,10 +187,57 @@ class _MyAppState extends State<MyApp> {
               ),
               TestLabel(
                 label: 'launch url',
-                child: Container(color: Colors.red, child: GestureDetector(onTap: () async {
-                  MobiMapPlugin.launchBrowser('http://docs.google.com/viewer?url=https://istorage.fpt.vn/v2/big-upload/istorage/Map/1/202304/doc/Map_1682414322202_e355b11bd117658fc090b1c5abecaa9a_780965.pdf');
-                },),),
+                child: Container(
+                  color: Colors.red,
+                  child: GestureDetector(
+                    onTap: () async {
+                      MobiMapPlugin.launchBrowser(
+                          'http://docs.google.com/viewer?url=https://istorage.fpt.vn/v2/big-upload/istorage/Map/1/202304/doc/Map_1682414322202_e355b11bd117658fc090b1c5abecaa9a_780965.pdf');
+                    },
+                  ),
+                ),
               ),
+              //// Printer Check
+              TestLabel(
+                label: 'Check Printer Wifi',
+                child: Container(
+                  color: Colors.greenAccent,
+                  child: GestureDetector(
+                    onTap: () async {
+                      await MobiMapPlugin.checkConnnecPrinterWifi(
+                          printerModel: "30",
+                          printerSSID: "DIRECT-brPT-E550W6809",
+                          printerPass: "00000000",
+                          printerIPAddess: "192.168.1.118");
+                    },
+                  ),
+                ),
+              ),
+              //// Printer Check
+              TestLabel(
+                label: 'Connect Printer Chanel',
+                child: Container(
+                  color: Colors.greenAccent,
+                  child: GestureDetector(
+                    onTap: () async {
+                      await MobiMapPlugin.connectChannelPrinter(
+                          printerModel: "30",
+                          printerIPAddess: "192.168.1.118");
+                    },
+                  ),
+                ),
+              ),
+              TestLabel(
+                label: 'Connect Printer Wifi',
+                child: Container(
+                  color: Colors.greenAccent,
+                  child: GestureDetector(
+                    onTap: () async {
+                      await MobiMapPlugin.connectPrinterWifi(printerSSID: "DIRECT-brPT-E550W6809", printerPass: "00000000");
+                    },
+                  ),
+                ),
+              )
             ],
           ),
         ),
@@ -177,7 +246,7 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class TestLabel extends StatelessWidget{
+class TestLabel extends StatelessWidget {
   const TestLabel({super.key, this.child, this.label});
   final String? label;
   final Widget? child;
@@ -198,5 +267,4 @@ class TestLabel extends StatelessWidget{
       ),
     );
   }
-
 }
