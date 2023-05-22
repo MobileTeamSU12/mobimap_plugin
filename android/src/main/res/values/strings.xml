@@ -2,4 +2,10 @@
 <resources>
     <string name="msg_permission_gps_denied">Vui lòng cung cấp quyền truy cập vị trí cho ứng dụng.</string>
     <string name="msg_can_not_get_gps">Không thể lấy tạo độ hiện tại, vui lòng bật cải thiện độ chính xác trong cài đặt GPS.</string>
+    <string name="msg_fine_location_denied">Vui lòng cung cấp quyền truy cập vị trí cho ứng dụng.</string>
+    <string name="msg_can_not_find_printer_wifi">Không tìm thấy wifi của máy in</string>
+    <string name="msg_can_not_connect_to_printer_wifi">Không thể kết nối tới wifi của máy in</string>
+    <string name="msg_can_not_connect_to_wifi">Không thể kết nối tới wifi của máy in</string>
+    <string name="msg_can_not_connect_to_channel_printer">Không thể kết nối tới channel của máy in</string>
+    <string name="msg_does_not_connect_to_channel_printer">Chưa thực hiện kết nối tới máy in</string>
 </resources>

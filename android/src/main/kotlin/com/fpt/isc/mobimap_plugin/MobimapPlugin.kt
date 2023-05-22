@@ -8,7 +8,7 @@ import android.content.Context.LOCATION_SERVICE
 import android.content.Intent
 import android.content.IntentFilter
 import android.location.LocationManager
-import android.util.Log
+import com.brother.sdk.lmprinter.PrinterDriverGenerateResult
 import com.fpt.isc.mobimap_plugin.constants.Constants
 import com.fpt.isc.mobimap_plugin.constants.UtilsHelper
 import com.fpt.isc.mobimap_plugin.handler.*
@@ -25,6 +25,8 @@ import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.PluginRegistry
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /** MobimapPlugin */
 class MobimapPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
@@ -58,6 +60,7 @@ class MobimapPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     lateinit var activity: Activity
     lateinit var context: Context
     private lateinit var binaryMessenger: BinaryMessenger
+    private var printerResult: PrinterDriverGenerateResult? = null
 
     var onResultCallback: OnActivityResultListener? = null
     var onResultPermissionCallback: OnRequestPermissionsResult? = null
@@ -185,6 +188,49 @@ class MobimapPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
                     activity.startActivity(intent)
 //                    result.success("Success $url")
+                Constants.CONNECT_WIFI_PRINTER -> {
+                    val ssidPrinter: String? = call.argument(Constants.ssidPrinter)
+                    val passwordPrinter: String? = call.argument(Constants.passwordPrinter)
+                    val handler = ConnectWifiPrinterHandler(binaryMessenger, this, result)
+                    handler.connectToWifiPrinter({
+                        result.success(true)
+                    }, {
+                        result.error(errorCode, it, "empty param")
+                    }, context, ssidPrinter, passwordPrinter)
+                }
+                Constants.CONNECT_CHANNEL_PRINTER -> {
+                    val ipPrinter: String? = call.argument(Constants.ipPrinter)
+                    val handler = ConnectChannelPrinterHandler(binaryMessenger, this, result)
+                    GlobalScope.launch {
+                        handler.connectToChannelPrinter({
+                            printerResult = it
+                            result.success(true)
+                        }, {
+                            result.error(errorCode, it, "empty param")
+                        }, ipPrinter)
+                    }
+                }
+                Constants.PRINT_QR_CODE -> {
+                    val labelSize: Int? = call.argument(Constants.LABEL_SIZE)
+                    val resolution: Int? = call.argument(Constants.RESOLUTION)
+                    val isAutoCut: Boolean? = call.argument(Constants.IS_AUTO_CUT)
+                    val numCopies: Int? = call.argument(Constants.NUM_COPIES)
+                    val handler = PrintQRCodeHandler(binaryMessenger, this, result)
+                    if (printerResult != null) {
+                        GlobalScope.launch {
+                            handler.printQrCode({
+                                result.success(true)
+                            }, {
+                                result.error(errorCode, it, "empty param")
+                            }, context, printerResult!!, labelSize, resolution, isAutoCut, numCopies)
+                        }
+                    }else {
+                        result.error(
+                            errorCode,
+                            UtilsHelper.getStringRes(R.string.msg_does_not_connect_to_channel_printer),
+                            "empty param"
+                        )
+                    }
                 }
                 else -> {
                     result.notImplemented()

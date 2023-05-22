@@ -30,6 +30,9 @@ class Constants {
         const val VERSION_APP: String = "getVersionApp"
         const val HASH_COMMIT: String = "getHashCommit"
         const val LAUNCH_BROWSER: String = "launchBrowser"
+        const val CONNECT_WIFI_PRINTER: String = "connectWifiPrinter"
+        const val CONNECT_CHANNEL_PRINTER: String = "connectChannelPrinter"
+        const val PRINT_QR_CODE: String = "printQRCode"
 
         /**
          * Argument Name
@@ -40,6 +43,16 @@ class Constants {
         const val FILE_DATA_ARGUMENT: String = "fileData"
         const val URL_DATA_ARGUMENT: String = "url"
 	    const val PERMISSIONS_REQUEST_ARGUMENT: String = "permissionType"
+        // Arguments Printer
+        const val LABEL_SIZE: String = "labelSize"
+        const val RESOLUTION: String = "resolution"
+        const val WORK_PATH: String = "workPath"
+        const val IS_AUTO_CUT: String = "isAutoCut"
+        const val NUM_COPIES: String = "numCopies"
+        const val ssidPrinter:String = "ssidPrinter"
+        const val passwordPrinter:String = "passwordPrinter"
+        const val ipPrinter:String = "ipPrinter"
+
         /**
          * Event channel Name
          */
@@ -72,6 +85,10 @@ class Constants {
         const val disconnected = 3
         const val unknown = 4
         const val eof = -1
+
+        /**
+         *
+         */
 
         const val ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION_REQUEST = 302
         const val APP_SETTING_REQUEST = 312

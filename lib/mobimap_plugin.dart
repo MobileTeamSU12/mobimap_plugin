@@ -96,4 +96,32 @@ class MobiMapPlugin {
     };
     return await NativeChannelHandler.call(function: NativeFunction.connectWifiPrinter, arguments: argPrinterInfo);
   }
+
+  static Future<void> connectWifiPrinter () async {
+    final result = await NativeChannelHandler.call(function: NativeFunction.connectWifiPrinter, arguments: {
+      NativeArgument.ssidPrinter : "DIRECT-brPT-E550W6809",
+      NativeArgument.passwordPrinter : "00000000",
+    });
+    if(result){
+      await MobiMapPlugin.connectChannelPrinter();
+    }
+    print(result);
+  }
+
+  static Future<void> connectChannelPrinter () async {
+    final result = await NativeChannelHandler.call(function: NativeFunction.connectChannelPrinter, arguments: {
+      NativeArgument.ipPrinter: "192.168.118.1"
+    });
+    print(result);
+  }
+
+  static Future<void> printQrCode() async {
+    final result = await NativeChannelHandler.call(function: NativeFunction.printQRCode, arguments: {
+      NativeArgument.labelSize: 5, // 3: Width12mm, 4: Width18mm, 5: Width24mm(default)
+      NativeArgument.resolution: 2, // 0: Low, 1: Normal, 2: High(default)
+      NativeArgument.isAutoCut: true, // true(default)/false
+      NativeArgument.numCopies: 1, // 1(default)
+    });
+    print(result);
+  }
 }

@@ -36,6 +36,9 @@ class NativeFunction{
   static const String getVersionApp = 'getVersionApp';
   static const String getHashCommit = 'getHashCommit';
   static const String launchBrowser = 'launchBrowser';
+  static const String connectWifiPrinter = "connectWifiPrinter";
+  static const String connectChannelPrinter  = "connectChannelPrinter";
+  static const String printQRCode = "printQRCode";
 
   ///Đang xem xét
   static const String saveImageToGallery = 'saveImageToGallery';
@@ -62,4 +65,15 @@ class NativeArgument{
   static const String printerSSID = 'printerSSID';
   static const String printerPass = 'printerPass';
   static const String printerIPAddess = 'printerIPAddess';
+
+  /// printer connection
+  static const String ssidPrinter = 'ssidPrinter';
+  static const String passwordPrinter = 'passwordPrinter';
+  static const String ipPrinter = 'ipPrinter';
+
+  /// printer setting
+  static const String labelSize = 'labelSize';
+  static const String resolution = 'resolution';
+  static const String workPath = 'workPath';
+  static const String isAutoCut = 'isAutoCut';
 }

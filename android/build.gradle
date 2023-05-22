@@ -18,6 +18,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -41,7 +42,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 20
+        minSdkVersion 21
     }
 }
 
@@ -52,4 +53,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'androidx.window:window:1.0.0'
     implementation 'androidx.window:window-java:1.0.0'
+    implementation 'com.github.MobileTeamSU12:Android_BrotherPrintLibrary:1.0.0'
 }

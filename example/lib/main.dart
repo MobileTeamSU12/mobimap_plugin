@@ -105,6 +105,27 @@ class _MyAppState extends State<MyApp> {
               ),
 
               TestLabel(
+                label: 'Wifi Printer',
+                child: Container(color: Colors.red, child: GestureDetector(onTap: () async{
+                  await MobiMapPlugin.connectWifiPrinter();
+                },),),
+              ),
+
+              TestLabel(
+                label: 'Channel Printer',
+                child: Container(color: Colors.red, child: GestureDetector(onTap: () async{
+                  await MobiMapPlugin.connectChannelPrinter();
+                },),),
+              ),
+
+              TestLabel(
+                label: 'Print QR Code',
+                child: Container(color: Colors.red, child: GestureDetector(onTap: () async{
+                  await MobiMapPlugin.printQrCode();
+                },),),
+              ),
+
+              TestLabel(
                 label: 'Take photo',
                 child: Container(color: Colors.red, child: GestureDetector(onTap: () async{
                   image = await MobiMapImagePlugin.takePhoto(drawText: [], fileName: 'test');
