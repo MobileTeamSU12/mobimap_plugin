@@ -83,7 +83,7 @@ enum FunctionName:String{
     case getGpsStatus = "getGpsStatus"
     case getVersionApp = "getVersionApp"
     case getHashCommit = "getHashCommit"
-    case checkConnnecPrinterWifi = "checkConnnecPrinterWifi"
+    case checkConnecPrinterWifi = "checkConnecPrinterWifi"
     case connectChannelPrinter = "connectChannelPrinter"
     case connectWifiPrinter = "connectWifiPrinter"
     

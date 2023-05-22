@@ -42,7 +42,7 @@ class NativeFunction{
   static const String connectPrinter = 'connectPrinter';
   static const String QRcode = 'QRcode';
   // Printer
-  static const String checkConnnecPrinterWifi = 'checkConnnecPrinterWifi';
+  static const String checkConnecPrinterWifi = 'checkConnecPrinterWifi';
   static const String connectChannelPrinter = 'connectChannelPrinter';
   static const String connectWifiPrinter = 'connectWifiPrinter';
   static const String printQRCode = "printQRCode";

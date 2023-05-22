@@ -71,7 +71,7 @@ class MobiMapPlugin {
       NativeArgument.printerPass: printerPass,
       NativeArgument.printerIPAddress: printerIPAddess,
     };
-    return await NativeChannelHandler.call(function: NativeFunction.checkConnnecPrinterWifi, arguments: argPrinterInfo);
+    return await NativeChannelHandler.call(function: NativeFunction.checkConnecPrinterWifi, arguments: argPrinterInfo);
   }
 
   static Future<bool> connectChannelPrinter({
