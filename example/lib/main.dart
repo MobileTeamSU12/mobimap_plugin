@@ -107,14 +107,14 @@ class _MyAppState extends State<MyApp> {
               TestLabel(
                 label: 'Wifi Printer',
                 child: Container(color: Colors.red, child: GestureDetector(onTap: () async{
-                  await MobiMapPlugin.connectWifiPrinter();
+                  await MobiMapPlugin.connectPrinterWifi(printerPass: "00000000", printerSSID: "DIRECT-brPT-E550W6809");
                 },),),
               ),
 
               TestLabel(
                 label: 'Channel Printer',
                 child: Container(color: Colors.red, child: GestureDetector(onTap: () async{
-                  await MobiMapPlugin.connectChannelPrinter();
+                  await MobiMapPlugin.connectChannelPrinter(printerModel: "PT-E550W", printerIPAddess: "192.168.118.1");
                 },),),
               ),
 

@@ -103,17 +103,17 @@ class MobiMapPlugin {
       NativeArgument.passwordPrinter : "00000000",
     });
     if(result){
-      await MobiMapPlugin.connectChannelPrinter();
+      await MobiMapPlugin.connectChannelPrinter(printerIPAddess: "192.168.118.1", printerModel: "PT_E550W");
     }
     print(result);
   }
 
-  static Future<void> connectChannelPrinter () async {
-    final result = await NativeChannelHandler.call(function: NativeFunction.connectChannelPrinter, arguments: {
-      NativeArgument.ipPrinter: "192.168.118.1"
-    });
-    print(result);
-  }
+  // static Future<void> connectChannelPrinter () async {
+  //   final result = await NativeChannelHandler.call(function: NativeFunction.connectChannelPrinter, arguments: {
+  //     NativeArgument.ipPrinter: "192.168.118.1"
+  //   });
+  //   print(result);
+  // }
 
   static Future<void> printQrCode() async {
     final result = await NativeChannelHandler.call(function: NativeFunction.printQRCode, arguments: {

@@ -181,13 +181,15 @@ class MobimapPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                     result.success("Not implement yet")
                 }
                 Constants.LAUNCH_BROWSER -> {
-                    val url: String = call.argument(Constants.URL_DATA_ARGUMENT) ?: "http://google.com"
+                    val url: String =
+                        call.argument(Constants.URL_DATA_ARGUMENT) ?: "http://google.com"
 
                     val intent: Intent = Intent(Intent.ACTION_VIEW)
                     intent.setDataAndType(Uri.parse(url), "text/html")
 
                     activity.startActivity(intent)
 //                    result.success("Success $url")
+                }
                 Constants.CONNECT_WIFI_PRINTER -> {
                     val ssidPrinter: String? = call.argument(Constants.ssidPrinter)
                     val passwordPrinter: String? = call.argument(Constants.passwordPrinter)

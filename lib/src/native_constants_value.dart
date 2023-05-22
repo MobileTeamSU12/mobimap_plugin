@@ -36,9 +36,6 @@ class NativeFunction{
   static const String getVersionApp = 'getVersionApp';
   static const String getHashCommit = 'getHashCommit';
   static const String launchBrowser = 'launchBrowser';
-  static const String connectWifiPrinter = "connectWifiPrinter";
-  static const String connectChannelPrinter  = "connectChannelPrinter";
-  static const String printQRCode = "printQRCode";
 
   ///Đang xem xét
   static const String saveImageToGallery = 'saveImageToGallery';
@@ -48,6 +45,7 @@ class NativeFunction{
   static const String checkConnnecPrinterWifi = 'checkConnnecPrinterWifi';
   static const String connectChannelPrinter = 'connectChannelPrinter';
   static const String connectWifiPrinter = 'connectWifiPrinter';
+  static const String printQRCode = "printQRCode";
 
 }
 
