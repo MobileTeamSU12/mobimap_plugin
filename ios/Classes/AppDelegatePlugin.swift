@@ -257,7 +257,7 @@ extension AppDelegatePlugin{
             let hasCommit = self.getHasCommit()
             result(hasCommit)
             break
-        case FunctionName.checkConnnecPrinterWifi.rawValue:
+        case FunctionName.checkConnecPrinterWifi.rawValue:
             guard let param = call.arguments as? [String:AnyObject] else {return}
             let printerModel = param[FunctionParameters.printerModel.rawValue] as? String ?? ""
             let printerSSID = param[FunctionParameters.printerSSID.rawValue] as? String ?? ""
@@ -275,20 +275,21 @@ extension AppDelegatePlugin{
                 agrResult["status"] = status as AnyObject
                 agrResult["mes"] = mes as AnyObject
                 print(agrResult)
-                if (!status){
-                    self.printerKitControler.connectionWifi(ssid: userInfoPrinter!.priterWifiSSID! , pass: userInfoPrinter!.priterWifiPass!) { status in
-                        agrResult["status"] = status as AnyObject
-                        if (status){
-                            agrResult["mes"] = "Kết nối mạng wifi thành công" as AnyObject
-                        } else {
-                            agrResult["mes"] = "Kết nối mạng wifi không thành công" as AnyObject
-                        }
-                        print(agrResult)
-                        result(agrResult)
-                    }
-                } else {
-                    result(agrResult)
-                }
+                result(agrResult)
+//                if (!status){
+//                    self.printerKitControler.connectionWifi(ssid: userInfoPrinter!.priterWifiSSID! , pass: userInfoPrinter!.priterWifiPass!) { status in
+//                        agrResult["status"] = status as AnyObject
+//                        if (status){
+//                            agrResult["mes"] = "Kết nối mạng wifi thành công" as AnyObject
+//                        } else {
+//                            agrResult["mes"] = "Kết nối mạng wifi không thành công" as AnyObject
+//                        }
+//                        print(agrResult)
+//                        result(agrResult)
+//                    }
+//                } else {
+//                    result(agrResult)
+//                }
             }
             break
         case FunctionName.connectChannelPrinter.rawValue:
