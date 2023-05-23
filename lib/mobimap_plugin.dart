@@ -95,8 +95,11 @@ class MobiMapPlugin {
       NativeArgument.printerPass: printerPass,
     };
     final result = await NativeChannelHandler.call(function: NativeFunction.connectWifiPrinter, arguments: argPrinterInfo);
+    print("Connect wifi: $result");
     if(result){
-      return await MobiMapPlugin.connectChannelPrinter(printerIPAddess: "192.168.118.1", printerModel: "PT_E550W");
+       final resultChannel = await MobiMapPlugin.connectChannelPrinter(printerIPAddess: "192.168.118.1", printerModel: "PT_E550W");
+       print("Connect channel: $resultChannel");
+       return resultChannel;
     }else{
       return result;
     }
@@ -108,6 +111,7 @@ class MobiMapPlugin {
     required bool isAutoCut,
     required int numCopies,
 }) async {
+    print("start print QRCode");
     final result = await NativeChannelHandler.call(function: NativeFunction.printQRCode, arguments: {
       NativeArgument.labelSize: 5, // 3: Width12mm, 4: Width18mm, 5: Width24mm(default)
       NativeArgument.resolution: 2, // 0: Low, 1: Normal, 2: High(default)
