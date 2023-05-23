@@ -58,30 +58,30 @@ class MobiMapPlugin {
     });
   }
 
-  static Future<bool> checkConnnecPrinterWifi({
+  static Future<bool> checkConnectPrinterWifi({
     required String printerModel,
     required String printerSSID,
     required String printerPass,
-    required String printerIPAddess,
+    required String printerIPAddress,
   }) async {
     Map<String, dynamic>? argPrinterInfo = <String, dynamic>{};
     argPrinterInfo = {
       NativeArgument.printerModel: printerModel,
       NativeArgument.printerSSID: printerSSID,
       NativeArgument.printerPass: printerPass,
-      NativeArgument.printerIPAddress: printerIPAddess,
+      NativeArgument.printerIPAddress: printerIPAddress,
     };
     return await NativeChannelHandler.call(function: NativeFunction.checkConnecPrinterWifi, arguments: argPrinterInfo);
   }
 
   static Future<bool> connectChannelPrinter({
     required String printerModel,
-    required String printerIPAddess,
+    required String printerIPAddress,
   }) async {
     Map<String, dynamic>? argPrinterInfo = <String, dynamic>{};
     argPrinterInfo = {
       NativeArgument.printerModel: printerModel,
-      NativeArgument.printerIPAddress: printerIPAddess,
+      NativeArgument.printerIPAddress: printerIPAddress,
     };
     final result = await NativeChannelHandler.call(function: NativeFunction.connectChannelPrinter, arguments: argPrinterInfo);
     print("Connect channel: $result");
@@ -111,10 +111,10 @@ class MobiMapPlugin {
 }) async {
     print("start print QRCode");
     final result = await NativeChannelHandler.call(function: NativeFunction.printQRCode, arguments: {
-      NativeArgument.labelSize: 5, // 3: Width12mm, 4: Width18mm, 5: Width24mm(default)
-      NativeArgument.resolution: 2, // 0: Low, 1: Normal, 2: High(default)
-      NativeArgument.isAutoCut: true, // true(default)/false
-      NativeArgument.numCopies: 1, // 1(default)
+      NativeArgument.labelSize: labelSize, // 3: Width12mm, 4: Width18mm, 5: Width24mm(default)
+      NativeArgument.resolution: resolution, // 0: Low, 1: Normal, 2: High(default)
+      NativeArgument.isAutoCut: isAutoCut, // true(default)/false
+      NativeArgument.numCopies: numCopies, // 1(default)
     });
     print(result);
   }
