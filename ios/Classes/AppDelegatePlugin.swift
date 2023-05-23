@@ -32,6 +32,10 @@ import FirebaseCore
     @objc open var GMSServicesAPIKey:String = ""
   
     // MARK: Application Life Cycle
+    func GMSServicesRegister(apikey: String) -> Bool {
+        return GMSServices.provideAPIKey(apikey)
+    }
+    
     open override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -40,10 +44,9 @@ import FirebaseCore
             GMSServicesAPIKey = "AIzaSyB5GlI1gKmxppYi6MxzJo2AgzyfE5C-6d8"
             MobimapPlugin.GMSServicesAPIKey = GMSServicesAPIKey
         }
-//        GMSServices.provideAPIKey("AIzaSyB5GlI1gKmxppYi6MxzJo2AgzyfE5C-6d8")
-        GMSServices.provideAPIKey(GMSServicesAPIKey)
-        self.application = application;
-        self.launchOptions = launchOptions;
+        self.GMSServicesRegister(apikey: MobimapPlugin.GMSServicesAPIKey)
+        self.application = application
+        self.launchOptions = launchOptions
         if (self.flutterViewControler == nil){
             self.flutterViewControler = window?.rootViewController as? FlutterViewController
         }

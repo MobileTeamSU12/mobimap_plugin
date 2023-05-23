@@ -21,6 +21,7 @@ public class MobimapPlugin: NSObject, FlutterPlugin {
     }
     public static func register(with registrar: FlutterPluginRegistrar) {
         let instance = MobimapPlugin()
+        let _ = instance.mobimapPluginDelegate.GMSServicesRegister(apikey: MobimapPlugin.GMSServicesAPIKey)
         let channel = instance.mobimapPluginDelegate.createChanelMethod(controler: MobimapPlugin.flutterViewControler)
         registrar.addMethodCallDelegate(instance, channel: channel)
         let eventGPSChannel = FlutterEventChannel(name: ChanelName.eventGPS.rawValue, binaryMessenger: registrar.messenger())
