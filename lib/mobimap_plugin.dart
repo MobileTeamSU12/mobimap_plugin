@@ -64,7 +64,7 @@ class MobiMapPlugin {
     required String printerPass,
     required String printerIPAddess,
   }) async {
-    Map<String, dynamic>? argPrinterInfo = Map<String, dynamic>();
+    Map<String, dynamic>? argPrinterInfo = <String, dynamic>{};
     argPrinterInfo = {
       NativeArgument.printerModel: printerModel,
       NativeArgument.printerSSID: printerSSID,
@@ -78,31 +78,29 @@ class MobiMapPlugin {
     required String printerModel,
     required String printerIPAddess,
   }) async {
-    Map<String, dynamic>? argPrinterInfo = Map<String, dynamic>();
+    Map<String, dynamic>? argPrinterInfo = <String, dynamic>{};
     argPrinterInfo = {
       NativeArgument.printerModel: printerModel,
       NativeArgument.printerIPAddress: printerIPAddess,
     };
-    return await NativeChannelHandler.call(function: NativeFunction.connectChannelPrinter, arguments: argPrinterInfo);
+    final result = await NativeChannelHandler.call(function: NativeFunction.connectChannelPrinter, arguments: argPrinterInfo);
+    print("Connect channel: $result");
+    return result;
   }
+
+
   static Future<bool> connectPrinterWifi({
   required String printerSSID,
   required String printerPass,
   }) async {
-    Map<String, dynamic>? argPrinterInfo = Map<String, dynamic>();
+    Map<String, dynamic>? argPrinterInfo = <String, dynamic>{};
     argPrinterInfo = {
       NativeArgument.printerSSID: printerSSID,
       NativeArgument.printerPass: printerPass,
     };
     final result = await NativeChannelHandler.call(function: NativeFunction.connectWifiPrinter, arguments: argPrinterInfo);
     print("Connect wifi: $result");
-    if(result){
-       final resultChannel = await MobiMapPlugin.connectChannelPrinter(printerIPAddess: "192.168.118.1", printerModel: "PT_E550W");
-       print("Connect channel: $resultChannel");
-       return resultChannel;
-    }else{
-      return result;
-    }
+    return result;
   }
 
   static Future<void> printQrCode({
