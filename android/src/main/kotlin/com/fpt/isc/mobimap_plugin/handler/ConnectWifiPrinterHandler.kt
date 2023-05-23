@@ -15,6 +15,7 @@ import com.fpt.isc.mobimap_plugin.constants.UtilsHelper
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodChannel
 import java.util.*
+import kotlin.collections.HashMap
 
 class ConnectWifiPrinterHandler(
     binaryMessenger: BinaryMessenger,
@@ -25,11 +26,11 @@ class ConnectWifiPrinterHandler(
     private var passwordPrinterDefault = "00000000"
     private var networkSSID: String = ""
     private var isConnected = false
-
+    private val response: HashMap<String, Any> = HashMap()
+    private val successMessage:String = "Kết nối wifi thành công"
 
     fun connectToWifiPrinter(
-        onSuccess: () -> Unit,
-        onFailed: (message: String) -> Unit,
+        onSuccess: (HashMap<String, Any>) -> Unit,
         context: Context,
         ssidPrinter:String?,
         passwordPrinter: String?
@@ -47,7 +48,9 @@ class ConnectWifiPrinterHandler(
                 ) == PackageManager.PERMISSION_DENIED
             ) {
                 val message = UtilsHelper.getStringRes(R.string.msg_fine_location_denied)
-                onFailed(message)
+                response["status"] = false
+                response["message"] = message
+                onSuccess(response)
                 return
             }
             val wifiManager =
@@ -67,7 +70,9 @@ class ConnectWifiPrinterHandler(
                     .startsWith(ssidFormatPrinter))
                 // check printer is connected
                 if (isFoundDeviceConnect) {
-                    onSuccess()
+                    response["status"] = true
+                    response["message"] = successMessage
+                    onSuccess(response)
                 } else {
 
                     // remove printer from list connected
@@ -104,7 +109,9 @@ class ConnectWifiPrinterHandler(
                     if (isNotFound) {
                         val message =
                             UtilsHelper.getStringRes(R.string.msg_can_not_find_printer_wifi)
-                        onFailed(message)
+                        response["status"] = false
+                        response["message"] = message
+                        onSuccess(response)
                         return
                     }
 
@@ -119,22 +126,30 @@ class ConnectWifiPrinterHandler(
                     wifiManager.enableNetwork(netId, true)
                     isConnected = wifiManager.reconnect()
                     if (isConnected) {
-                        onSuccess()
+                        response["status"] = true
+                        response["message"] = successMessage
+                        onSuccess(response)
                     } else {
-                        val message =
-                            UtilsHelper.getStringRes(R.string.msg_can_not_connect_to_printer_wifi)
-                        onFailed(message)
+                        val message = UtilsHelper.getStringRes(R.string.msg_can_not_connect_to_printer_wifi)
+                        response["status"] = false
+                        response["message"] = message
+                        onSuccess(response)
                         return
                     }
                 }
             } else {
                 val message = UtilsHelper.getStringRes(R.string.msg_can_not_connect_to_wifi)
-                onFailed(message)
+                response["status"] = false
+                response["message"] = message
+                onSuccess(response)
                 return
             }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
-            e.message?.let { onFailed(it) }
+            e.message?.let {
+                response["status"] = false
+                response["message"] = it
+                onSuccess(response) }
         }
 
 

@@ -196,9 +196,7 @@ class MobimapPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                     val handler = ConnectWifiPrinterHandler(binaryMessenger, this, result)
                     GlobalScope.run {
                         handler.connectToWifiPrinter({
-                            result.success(true)
-                        }, {
-                            result.error(errorCode, it, "empty param")
+                            result.success(it)
                         }, context, ssidPrinter, passwordPrinter)
                     }
                 }

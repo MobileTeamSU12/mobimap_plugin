@@ -1,6 +1,7 @@
 library mobimap_plugin;
 
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:mobimap_plugin/src/native_channel_handler.dart';
 import 'package:mobimap_plugin/src/native_constants_value.dart';
@@ -88,8 +89,7 @@ class MobiMapPlugin {
     return result;
   }
 
-
-  static Future<bool> connectPrinterWifi({
+  static Future<ResponsePrinterModel> connectPrinterWifi({
   required String printerSSID,
   required String printerPass,
   }) async {
@@ -100,7 +100,7 @@ class MobiMapPlugin {
     };
     final result = await NativeChannelHandler.call(function: NativeFunction.connectWifiPrinter, arguments: argPrinterInfo);
     print("Connect wifi: $result");
-    return result;
+    return ResponsePrinterModel.fromJson(result);
   }
 
   static Future<void> printQrCode({
@@ -117,5 +117,28 @@ class MobiMapPlugin {
       NativeArgument.numCopies: numCopies, // 1(default)
     });
     print(result);
+  }
+}
+
+class ResponsePrinterModel {
+  String? status;
+  String? message;
+
+  ResponsePrinterModel();
+
+  ResponsePrinterModel.fromJson(dynamic json) {
+    status = json[status];
+    message = json[message];
+  }
+
+  ResponsePrinterModel fromJson(json) {
+    return ResponsePrinterModel.fromJson(json);
+  }
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['status'] = status;
+    map['message'] = message;
+    return map;
   }
 }
