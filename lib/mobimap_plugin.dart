@@ -75,7 +75,7 @@ class MobiMapPlugin {
     return await NativeChannelHandler.call(function: NativeFunction.checkConnecPrinterWifi, arguments: argPrinterInfo);
   }
 
-  static Future<bool> connectChannelPrinter({
+  static Future<ResponsePrinterModel> connectChannelPrinter({
     required String printerModel,
     required String printerIPAddress,
   }) async {
@@ -86,7 +86,7 @@ class MobiMapPlugin {
     };
     final result = await NativeChannelHandler.call(function: NativeFunction.connectChannelPrinter, arguments: argPrinterInfo);
     print("Connect channel: $result");
-    return result;
+    return ResponsePrinterModel.fromJson(result);
   }
 
   static Future<ResponsePrinterModel> connectPrinterWifi({
@@ -121,14 +121,14 @@ class MobiMapPlugin {
 }
 
 class ResponsePrinterModel {
-  String? status;
+  bool? status;
   String? message;
 
   ResponsePrinterModel();
 
   ResponsePrinterModel.fromJson(dynamic json) {
-    status = json[status];
-    message = json[message];
+    status = json["status"];
+    message = json["message"];
   }
 
   ResponsePrinterModel fromJson(json) {
