@@ -204,11 +204,9 @@ class MobimapPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                     val ipPrinter: String? = call.argument(Constants.printerIPAddress)
                     val handler = ConnectChannelPrinterHandler(binaryMessenger, this, result)
                     GlobalScope.launch {
-                        handler.connectToChannelPrinter({
-                            printerResult = it
-                            result.success(true)
-                        }, {
-                            result.error(errorCode, it, "empty param")
+                        handler.connectToChannelPrinter({ printer, response ->
+                            printerResult = printer
+                            result.success(response)
                         }, ipPrinter)
                     }
                 }

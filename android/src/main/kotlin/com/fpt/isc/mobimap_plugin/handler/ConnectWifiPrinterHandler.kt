@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import android.text.TextUtils
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.fpt.isc.mobimap_plugin.MobimapPlugin
@@ -36,6 +37,7 @@ class ConnectWifiPrinterHandler(
         passwordPrinter: String?
     ) {
         try {
+            Log.d("Connect wifi", "start to connect")
             if(ssidPrinter != null)
                 ssidFormatPrinter = ssidPrinter.lowercase()
             if(passwordPrinter != null)

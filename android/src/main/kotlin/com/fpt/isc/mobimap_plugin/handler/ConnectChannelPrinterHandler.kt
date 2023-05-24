@@ -21,13 +21,15 @@ class ConnectChannelPrinterHandler(
     result: MethodChannel.Result
 ) : BaseHandler(messenger, plugin, result) {
     private var ipPrinterDefault = "192.168.118.1"
+    private val response: HashMap<String, Any> = HashMap()
+    private val successMessage:String = "Kết nối channel thành công"
 
     fun connectToChannelPrinter(
-        onSuccess: (printerDriver:PrinterDriverGenerateResult) -> Unit,
-        onFailed: (message: String) -> Unit,
+        onSuccess: (printerDriver:PrinterDriverGenerateResult?, response: HashMap<String, Any>) -> Unit,
         ipPrinter: String?
     ) {
         try {
+            Log.d("Connect channel: ", "start to connect" )
             if (ipPrinter != null){
                 ipPrinterDefault = ipPrinter
             }
@@ -39,12 +41,16 @@ class ConnectChannelPrinterHandler(
             if (result.error.code !== OpenChannelError.ErrorCode.NoError) {
                 val message =
                     UtilsHelper.getStringRes(R.string.msg_can_not_connect_to_channel_printer)
-                onFailed(message)
+                response["status"] = false
+                response["message"] = message
+                onSuccess(null, response)
                 return
             }
-            onSuccess(result)
+            response["status"] = true
+            response["message"] = successMessage
+            onSuccess(result, response)
         } catch (e: Exception) {
-            Log.d("connect channel printer", e.message.toString())
+            Log.d("Connect channel: ", e.message.toString())
         }
 
     }
