@@ -190,6 +190,16 @@ class MobimapPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                     activity.startActivity(intent)
 //                    result.success("Success $url")
                 }
+//                Constants.CONNECT_WIFI_PRINTER -> {
+//                    val ssidPrinter: String? = call.argument(Constants.ssidPrinter)
+//                    val passwordPrinter: String? = call.argument(Constants.printerPass)
+//                    val handler = ConnectWifiPrinterHandler(binaryMessenger, this, result)
+//                    GlobalScope.run {
+//                        handler.connectToWifiPrinter({
+//                            result.success(it)
+//                        }, context, ssidPrinter, passwordPrinter)
+//                    }
+//                }
                 Constants.CONNECT_WIFI_PRINTER -> {
                     val ssidPrinter: String? = call.argument(Constants.ssidPrinter)
                     val passwordPrinter: String? = call.argument(Constants.printerPass)

@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
+import android.net.wifi.WifiNetworkSpecifier
+import android.os.Build
 import android.text.TextUtils
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -46,9 +48,7 @@ class ConnectWifiPrinterHandler(
             // check permission location
             if (ActivityCompat.checkSelfPermission(
                     context,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_DENIED
-            ) {
+                    Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_DENIED) {
                 val message = UtilsHelper.getStringRes(R.string.msg_fine_location_denied)
                 response["status"] = false
                 response["message"] = message
@@ -89,8 +89,10 @@ class ConnectWifiPrinterHandler(
                             wifiManager.saveConfiguration()
                         }
                     }
+                    val list1 = wifiManager.configuredNetworks
 
                     // scan list wifi
+                    wifiManager.startScan()
                     val mScanResults = wifiManager.scanResults
                     var isNotFound = true
                     networkSSID = ""
@@ -124,8 +126,10 @@ class ConnectWifiPrinterHandler(
                         passwordPrinterDefault
                     )
                     val netId = wifiManager.addNetwork(conf)
+                    conf.priority = 100000
                     wifiManager.disconnect()
                     wifiManager.enableNetwork(netId, true)
+                    wifiManager.saveConfiguration()
                     isConnected = wifiManager.reconnect()
                     if (isConnected) {
                         response["status"] = true
