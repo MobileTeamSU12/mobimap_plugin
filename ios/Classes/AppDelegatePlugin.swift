@@ -24,7 +24,6 @@ import FirebaseCore
     var printerKitControler:BRLMPrinterKitControler!
     var printerSettingUser:PrinterSettingUser? = nil
     
-    
     var networkStreamHandler:NetworkMonitorStreamHandler!
     @objc open var application:UIApplication!
     @objc open var launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -51,6 +50,7 @@ import FirebaseCore
             self.flutterViewControler = window?.rootViewController as? FlutterViewController
         }
         self.printerKitControler = BRLMPrinterKitControler()
+        self.printerSettingUser = PrinterSettingUser()
         self.registerChanelMethod(controler: self.flutterViewControler)
         self.registerEventMethod(controler: self.flutterViewControler)
         self.registerNotification(application:self.application)
@@ -261,17 +261,22 @@ extension AppDelegatePlugin{
             result(hasCommit)
             break
         case FunctionName.checkConnecPrinterWifi.rawValue:
+            self.printerKitControler = BRLMPrinterKitControler()
+            self.printerSettingUser = PrinterSettingUser()
             guard let param = call.arguments as? [String:AnyObject] else {return}
             let printerModel = param[FunctionParameters.printerModel.rawValue] as? String ?? ""
             let printerSSID = param[FunctionParameters.printerSSID.rawValue] as? String ?? ""
             let printerPass = param[FunctionParameters.printerPass.rawValue] as? String ?? ""
             let printerIPAddess = param[FunctionParameters.printerIPAddess.rawValue] as? String ?? ""
-            self.printerSettingUser = PrinterSettingUser();
-            self.printerSettingUser!.priterWifiSSID = printerSSID
-            self.printerSettingUser!.priterModel = Int(printerModel)
-            self.printerSettingUser!.priterWifiPass = printerPass
-            self.printerSettingUser!.priterWifiIP = printerIPAddess
-            self.printerSettingUser?.setPrintInfoSettingDefault(printerSettingUser!)
+            self.printerSettingUser = self.printerSettingUser!.getPrintInfoSettingDefault();
+            if (self.printerSettingUser == nil) {
+                self.printerSettingUser = PrinterSettingUser()
+            }
+            self.printerSettingUser!.printerWifiSSID = printerSSID
+            self.printerSettingUser!.printerModel = Int(printerModel)
+            self.printerSettingUser!.printerWifiPass = printerPass
+            self.printerSettingUser!.printerWifiIP = printerIPAddess
+            self.printerSettingUser!.setPrintInfoSettingDefault(printerSettingUser!)
             self.printerKitControler.viewDidLoad()
             self.printerKitControler.checkConnectWifiWith() { status,mes, userInfoPrinter in
                 var agrResult = [String:AnyObject]()
@@ -280,7 +285,7 @@ extension AppDelegatePlugin{
                 print(agrResult)
                 result(agrResult)
 //                if (!status){
-//                    self.printerKitControler.connectionWifi(ssid: userInfoPrinter!.priterWifiSSID! , pass: userInfoPrinter!.priterWifiPass!) { status in
+//                    self.printerKitControler.connectionWifi(ssid: userInfoPrinter!.printerWifiSSID! , pass: userInfoPrinter!.printerWifiPass!) { status in
 //                        agrResult["status"] = status as AnyObject
 //                        if (status){
 //                            agrResult["mes"] = "Kết nối mạng wifi thành công" as AnyObject
@@ -296,14 +301,19 @@ extension AppDelegatePlugin{
             }
             break
         case FunctionName.connectChannelPrinter.rawValue:
+            self.printerKitControler = BRLMPrinterKitControler()
+            self.printerSettingUser = PrinterSettingUser()
             guard let param = call.arguments as? [String:AnyObject] else {return}
             let printerModel = param[FunctionParameters.printerModel.rawValue] as? String ?? ""
             let printerIPAddess = param[FunctionParameters.printerIPAddess.rawValue] as? String ?? ""
             self.printerSettingUser = self.printerSettingUser!.getPrintInfoSettingDefault();
-            self.printerSettingUser!.priterModel = Int(printerModel)
-            self.printerSettingUser!.priterWifiIP = printerIPAddess
+            if (self.printerSettingUser == nil) {
+                self.printerSettingUser = PrinterSettingUser()
+            }
+            self.printerSettingUser!.printerModel = Int(printerModel)
+            self.printerSettingUser!.printerWifiIP = printerIPAddess
             self.printerSettingUser?.setPrintInfoSettingDefault(printerSettingUser!)
-            self.printerKitControler.openChanelPriter(complete: {driver,userInfoPrinter in
+            self.printerKitControler.openChanelPrinter(complete: {driver,userInfoPrinter in
                 var agrResult = [String:AnyObject]()
                 if (driver == nil){
                     agrResult["status"] = false as AnyObject
@@ -313,20 +323,25 @@ extension AppDelegatePlugin{
                     return
                 }
                 agrResult["status"] = true as AnyObject
-                agrResult["mes"] = "Kết nối kênh máy inthành công" as AnyObject
+                agrResult["mes"] = "Kết nối kênh máy in thành công" as AnyObject
                 result(agrResult)
                 print(agrResult)
             })
             break
         case FunctionName.connectWifiPrinter.rawValue:
+            self.printerKitControler = BRLMPrinterKitControler()
+            self.printerSettingUser = PrinterSettingUser()
             guard let param = call.arguments as? [String:AnyObject] else {return}
             let printerSSID = param[FunctionParameters.printerSSID.rawValue] as? String ?? ""
             let printerPass = param[FunctionParameters.printerPass.rawValue] as? String ?? ""
             self.printerSettingUser = self.printerSettingUser!.getPrintInfoSettingDefault();
-            self.printerSettingUser!.priterWifiSSID = printerSSID
-            self.printerSettingUser!.priterWifiPass = printerPass
+            if (self.printerSettingUser == nil) {
+                self.printerSettingUser = PrinterSettingUser()
+            }
+            self.printerSettingUser!.printerWifiSSID = printerSSID
+            self.printerSettingUser!.printerWifiPass = printerPass
             self.printerSettingUser!.setPrintInfoSettingDefault(printerSettingUser!)
-            self.printerKitControler.connectionWifi(ssid: self.printerSettingUser!.priterWifiSSID! , pass: self.printerSettingUser!.priterWifiPass!) { status in
+            self.printerKitControler.checkConnectWifi { status, printerSettingUser in
                 var agrResult = [String:AnyObject]()
                 agrResult["status"] = status as AnyObject
                 if (status){
@@ -334,6 +349,42 @@ extension AppDelegatePlugin{
                 } else {
                     agrResult["mes"] = "Kết nối mạng wifi không thành công" as AnyObject
                 }
+                if (status){
+                    self.printerKitControler.connectionWifi(ssid: self.printerSettingUser!.printerWifiSSID! , pass: self.printerSettingUser!.printerWifiPass!) { status in
+                        var agrResult = [String:AnyObject]()
+                        agrResult["status"] = status as AnyObject
+                        if (status){
+                            agrResult["mes"] = "Kết nối mạng wifi thành công" as AnyObject
+                        } else {
+                            agrResult["mes"] = "Kết nối mạng wifi không thành công" as AnyObject
+                        }
+                        result(agrResult)
+                        print(agrResult)
+                    }
+                } else {
+                    result(agrResult)
+                    print(agrResult)
+                }
+            }
+            
+            break
+        case FunctionName.printQRCode.rawValue:
+            self.printerKitControler = BRLMPrinterKitControler()
+            self.printerSettingUser = PrinterSettingUser()
+            guard let param = call.arguments as? [String:AnyObject] else {return}
+            let filePath = param[FunctionParameters.printerFilePath.rawValue] as? String ?? ""
+            let labelSize = param[FunctionParameters.labelSize.rawValue] as? Int ?? 5
+            let resolution = param[FunctionParameters.resolution.rawValue] as? Int ?? 3
+            let numCopies = param[FunctionParameters.numCopies.rawValue] as? Int ?? 1
+            let isAutoCut = param[FunctionParameters.isAutoCut.rawValue] as? Bool ?? true
+            self.printerSettingUser = self.printerSettingUser!.getPrintInfoSettingDefault();
+            if (self.printerSettingUser == nil) {
+                self.printerSettingUser = PrinterSettingUser()
+            }
+            self.printerKitControler.printFileWithChanel(filePath, autoCut: isAutoCut, numCopies: numCopies, labelSize: labelSize, resolution: resolution) { status, mes in
+                var agrResult = [String:AnyObject]()
+                agrResult["status"] = status as AnyObject
+                agrResult["mes"] = mes as AnyObject
                 result(agrResult)
                 print(agrResult)
             }

@@ -108,6 +108,7 @@ class MobiMapPlugin {
     required int resolution,
     required bool isAutoCut,
     required int numCopies,
+    required String filePath,
 }) async {
     print("start print QRCode");
     final result = await NativeChannelHandler.call(function: NativeFunction.printQRCode, arguments: {
@@ -115,6 +116,7 @@ class MobiMapPlugin {
       NativeArgument.resolution: resolution, // 0: Low, 1: Normal, 2: High(default)
       NativeArgument.isAutoCut: isAutoCut, // true(default)/false
       NativeArgument.numCopies: numCopies, // 1(default)
+      NativeArgument.printerFilePath: filePath,
     });
     print(result);
   }

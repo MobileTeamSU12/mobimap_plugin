@@ -86,6 +86,7 @@ enum FunctionName:String{
     case checkConnecPrinterWifi = "checkConnecPrinterWifi"
     case connectChannelPrinter = "connectChannelPrinter"
     case connectWifiPrinter = "connectWifiPrinter"
+    case printQRCode = "printQRCode"
     
 }
 enum FunctionParameters:String{
@@ -100,4 +101,11 @@ enum FunctionParameters:String{
     case printerSSID = "printerSSID"
     case printerPass = "printerPass"
     case printerIPAddess = "printerIPAddess"
+    case printerFilePath = "printerFilePath"
+    
+    case labelSize = "labelSize";
+    case resolution = "resolution";
+    case workPath = "workPath";
+    case isAutoCut = "isAutoCut";
+    case  numCopies = "numCopies";
 }

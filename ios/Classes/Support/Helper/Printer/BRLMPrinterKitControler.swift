@@ -88,28 +88,28 @@ public class BRLMPrinterKitControler: UIViewController {
     @IBAction  public func Print(_ sender: Any) {
         self.printWithChanel()
     }
-    public func checkConnectWifiWith(complete:@escaping (_ status:Bool,_ mes:String,_ priterSettingUser:PrinterSettingUser?)->()){
-       let priterSettingUser:PrinterSettingUser? = self.getPriterSettingDefault()
-       if ((priterSettingUser != nil)){
+    public func checkConnectWifiWith(complete:@escaping (_ status:Bool,_ mes:String,_ printerSettingUser:PrinterSettingUser?)->()){
+       let printerSettingUser:PrinterSettingUser? = self.getPrinterSettingDefault()
+       if ((printerSettingUser != nil)){
            let wifiInterfaces = self.getWiFiName()
-           if (wifiInterfaces == priterSettingUser!.priterWifiSSID!){
-               complete(true,"Kết nối thành công vào mạng wifi máy in",priterSettingUser)
+           if (wifiInterfaces == printerSettingUser!.printerWifiSSID!){
+               complete(true,"Kết nối thành công vào mạng wifi máy in",printerSettingUser)
            }else {
-               complete(false,"Chọn đúng mạng wifi máy của máy in",priterSettingUser)
+               complete(false,"Chọn đúng mạng wifi máy của máy in",printerSettingUser)
            }
        } else {
            complete(false,"Chọn đúng mạng wifi máy của máy in",nil)
        }
    }
     
-    public func checkConnectWifi(complete:@escaping (_ status:Bool,_ priterSettingUser:PrinterSettingUser?)->()){
-    let priterSettingUser:PrinterSettingUser? = self.getPriterSettingDefault()
-    if ((priterSettingUser != nil)){
+    public func checkConnectWifi(complete:@escaping (_ status:Bool,_ printerSettingUser:PrinterSettingUser?)->()){
+    let printerSettingUser:PrinterSettingUser? = self.getPrinterSettingDefault()
+    if ((printerSettingUser != nil)){
         let wifiInterfaces = self.getWiFiName()
-        if (wifiInterfaces == priterSettingUser!.priterWifiSSID!){
-            complete(true,priterSettingUser!)
+        if (wifiInterfaces == printerSettingUser!.printerWifiSSID!){
+            complete(true,printerSettingUser!)
         }else {
-            complete(false,priterSettingUser!)
+            complete(false,printerSettingUser!)
 
         }
     } else {
@@ -117,32 +117,32 @@ public class BRLMPrinterKitControler: UIViewController {
     }
 }
     
-     public func  getPriterSettingDefault()->PrinterSettingUser{
-        var priterSettingUser:PrinterSettingUser = PrinterSettingUser()
-        if (priterSettingUser.getPrintInfoSettingDefault() == nil){
-            priterSettingUser.setPrintInfoSettingDefault(priterSettingUser)
+     public func  getPrinterSettingDefault()->PrinterSettingUser{
+        var printerSettingUser:PrinterSettingUser = PrinterSettingUser()
+        if (printerSettingUser.getPrintInfoSettingDefault() == nil){
+            printerSettingUser.setPrintInfoSettingDefault(printerSettingUser)
         }
-        priterSettingUser = priterSettingUser.getPrintInfoSettingDefault() ?? PrinterSettingUser()
-        return priterSettingUser
+        printerSettingUser = printerSettingUser.getPrintInfoSettingDefault() ?? PrinterSettingUser()
+        return printerSettingUser
     }
     
-     public func openChanelPriter(complete:@escaping (_ driver:BRLMPrinterDriver?,_ priterSettingUser:PrinterSettingUser? )->()){
-        var priterSettingUser:PrinterSettingUser? = PrinterSettingUser().getPrintInfoSettingDefault()
-        if (priterSettingUser != nil){
-            let channel:BRLMChannel = BRLMChannel(wifiIPAddress: priterSettingUser!.priterWifiIP!)
+     public func openChanelPrinter(complete:@escaping (_ driver:BRLMPrinterDriver?,_ printerSettingUser:PrinterSettingUser? )->()){
+        var printerSettingUser:PrinterSettingUser? = PrinterSettingUser().getPrintInfoSettingDefault()
+        if (printerSettingUser != nil){
+            let channel:BRLMChannel = BRLMChannel(wifiIPAddress: printerSettingUser!.printerWifiIP!)
             let generateResult = BRLMPrinterDriverGenerator.open(channel)
             guard generateResult.error.code == BRLMOpenChannelErrorCode.noError,
                   let printerDriver = generateResult.driver else {
 //                alert(title: "Error", message: "Open Channel: \(generateResult.error.code.rawValue)")
-                complete(nil,priterSettingUser)
+                complete(nil,printerSettingUser)
                 return
             }
-            complete(printerDriver,priterSettingUser)
+            complete(printerDriver,printerSettingUser)
         }
     }
     
      public func printWithChanel(){
-        self.openChanelPriter() { [self] (printerDriver,priterSettingUser) in
+        self.openChanelPrinter() { [self] (printerDriver,printerSettingUser) in
             if ((printerDriver) != nil){
                 defer {
                     printerDriver!.closeChannel()
@@ -156,7 +156,7 @@ public class BRLMPrinterKitControler: UIViewController {
                 }
 
                 //Change here for your printer
-                guard let printSettings =  BRLMPTPrintSettings(defaultPrintSettingsWith: BRLMPrinterModel(rawValue: priterSettingUser!.priterModel!) ?? BRLMPrinterModel.PT_E550W)
+                guard let printSettings =  BRLMPTPrintSettings(defaultPrintSettingsWith: BRLMPrinterModel(rawValue: printerSettingUser!.printerModel!) ?? BRLMPrinterModel.PT_E550W)
                 else {
                     self.showPrinterAlert(title: "Error", message: "Fail to create setting.")
                     return
@@ -177,29 +177,81 @@ public class BRLMPrinterKitControler: UIViewController {
                 }
                 return
             }
-            self.showPrinterChanelIPSettingDialog(ipAddress: priterSettingUser!.priterWifiIP, actionHandler:  { ssid in
-                priterSettingUser!.priterWifiIP = ssid
-                priterSettingUser!.setPrintInfoSettingDefault(priterSettingUser!)
+            self.showPrinterChanelIPSettingDialog(ipAddress: printerSettingUser!.printerWifiIP, actionHandler:  { ssid in
+                printerSettingUser!.printerWifiIP = ssid
+                printerSettingUser!.setPrintInfoSettingDefault(printerSettingUser!)
                 self.printWithChanel()
             })
         }
         
     }
     
+    public func printFileWithChanel(_ filePath:String,autoCut:Bool, numCopies:Int,labelSize:Int,resolution:Int,complete:@escaping (_ status:Bool,_ mes:String)->()){
+       self.openChanelPrinter() { [self] (printerDriver,printerSettingUser) in
+           if ((printerDriver) != nil){
+               defer {
+                   printerDriver!.closeChannel()
+               }
+               // get file in theo đường dẫn
+               guard
+//                   let url = Bundle.main.url(forResource: "IMG_2258", withExtension: "png")
+                    let url = URL(string: filePath)
+               else {
+//                   showPrinterAlert(title: "Error", message: " file is not found.")
+                   complete(false," file is not found.")
+                   return
+               }
+
+               //Change here for your printer
+               guard let printSettings =  BRLMPTPrintSettings(defaultPrintSettingsWith: BRLMPrinterModel(rawValue: printerSettingUser!.printerModel!) ?? BRLMPrinterModel.PT_E550W)
+               else {
+//                   self.showPrinterAlert(title: "Error", message: "Fail to create setting.")
+                   complete(false,"Fail to create setting.")
+                   return
+               }
+               //Change here for your printer label
+               printSettings.autoCut = autoCut
+               printSettings.numCopies = UInt(numCopies)
+//                printSettings.autoCutForEachPageCount = 1
+               printSettings.labelSize = BRLMPTPrintSettingsLabelSize(rawValue: labelSize) ?? .width24mm
+               printSettings.resolution = BRLMPrintSettingsResolution(rawValue: resolution) ?? .high
+               let printError = printerDriver!.printPDF(with: url, settings: printSettings)
+               
+               if printError.code != .noError {
+//                   self.showPrinterAlert(title: "Error", message: "Print Image: \(String(describing: printError.code.rawValue))")
+                   
+                   complete(false,printError.code == .customPaperSizeError ? "Thiết lập kích thức tem chưa đúng" : "Fail to create setting.")
+               }
+               else {
+//                   self.showPrinterAlert(title: "Success", message: "Print Image")
+                   complete(true,"Success Print ")
+               }
+               return
+           }
+           complete(false,"Fail to open Chanel Printer.")
+//           self.showPrinterChanelIPSettingDialog(ipAddress: printerSettingUser!.printerWifiIP, actionHandler:  { ssid in
+//               printerSettingUser!.printerWifiIP = ssid
+//               printerSettingUser!.setPrintInfoSettingDefault(printerSettingUser!)
+//               self.printWithChanel()
+//           })
+       }
+       
+   }
+    
     @IBAction  public func connectionWifi(_ sender: UIButton) {
         
-        self.checkConnectWifi { status, priterSettingUser in
-            if (status && priterSettingUser == nil){
+        self.checkConnectWifi { status, printerSettingUser in
+            if (status && printerSettingUser == nil){
                 self.showPrinterAlert(title: "Thông báo", message: "Lỗi kết nối đến máy in")
                 return
             }
             if (!status){
-                self.connectionWifi(ssid:priterSettingUser!.priterWifiSSID!, pass:priterSettingUser!.priterWifiPass!) {statusConneted in
+                self.connectionWifi(ssid:printerSettingUser!.printerWifiSSID!, pass:printerSettingUser!.printerWifiPass!) {statusConneted in
                     if (!statusConneted) {
-                        self.showPrinterWifiSettingDialog(ssid: priterSettingUser!.priterWifiSSID! ,pwd: priterSettingUser!.priterWifiPass!, actionHandler:  { ssidEdit, pwdEdit in
-                            priterSettingUser!.priterWifiSSID = ssidEdit
-                            priterSettingUser!.priterWifiPass = pwdEdit
-                            priterSettingUser?.setPrintInfoSettingDefault(priterSettingUser!)
+                        self.showPrinterWifiSettingDialog(ssid: printerSettingUser!.printerWifiSSID! ,pwd: printerSettingUser!.printerWifiPass!, actionHandler:  { ssidEdit, pwdEdit in
+                            printerSettingUser!.printerWifiSSID = ssidEdit
+                            printerSettingUser!.printerWifiPass = pwdEdit
+                            printerSettingUser?.setPrintInfoSettingDefault(printerSettingUser!)
                             self.connectionWifi(sender)
                         })}
                     sender.setTitle("Connected", for: .normal)
