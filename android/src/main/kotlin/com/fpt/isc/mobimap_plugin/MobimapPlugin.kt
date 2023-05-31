@@ -225,6 +225,7 @@ class MobimapPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                     val resolution: Int? = call.argument(Constants.RESOLUTION)
                     val isAutoCut: Boolean? = call.argument(Constants.IS_AUTO_CUT)
                     val numCopies: Int? = call.argument(Constants.NUM_COPIES)
+                    val printerFilePath: String? = call.argument(Constants.printerFilePath)
                     val handler = PrintQRCodeHandler(binaryMessenger, this, result)
                     if (printerResult != null) {
                         GlobalScope.launch {
@@ -232,7 +233,7 @@ class MobimapPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                                 result.success(true)
                             }, {
                                 result.error(errorCode, it, "empty param")
-                            }, context, printerResult!!, labelSize, resolution, isAutoCut, numCopies)
+                            }, context, printerResult!!, labelSize, resolution, isAutoCut, numCopies, printerFilePath)
                         }
                     }else {
                         result.error(

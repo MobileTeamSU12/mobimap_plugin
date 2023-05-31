@@ -30,22 +30,22 @@ class PrintQRCodeHandler(
         resolution: Int?,
         isAutoCut: Boolean?,
         numCopies: Int?,
-
+        printerFilePath: String?,
     ) {
 
         val printerDriver = printerResult.driver
 
         // Printer settings
         val printSettings = settingPrinter(context, labelSize, resolution, isAutoCut, numCopies)
+//
+//        val file = File.createTempFile("tmp", ".png", context.externalCacheDir)
+//        context.assets.open("sample.png").use { input ->
+//            file.outputStream().use { output ->
+//                copyFileUsingStream(input, output)
+//            }
+//        }
 
-        val file = File.createTempFile("tmp", ".png", context.externalCacheDir)
-        context.assets.open("sample.png").use { input ->
-            file.outputStream().use { output ->
-                copyFileUsingStream(input, output)
-            }
-        }
-
-        val printError: PrintError = printerDriver.printImage(file.path, printSettings)
+        val printError: PrintError = printerDriver.printPDF(printerFilePath, printSettings)
         if (printError.code != PrintError.ErrorCode.NoError) {
             onFailed("Error - Print Image: " + printError.code);
         } else {

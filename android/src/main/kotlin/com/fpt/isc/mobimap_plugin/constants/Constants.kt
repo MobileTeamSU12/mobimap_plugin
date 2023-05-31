@@ -52,6 +52,7 @@ class Constants {
         const val ssidPrinter:String = "printerSSID"
         const val printerPass:String = "printerPass"
         const val printerIPAddress:String = "printerIPAddress"
+        const val printerFilePath:String = "printerFilePath"
 
         /**
          * Event channel Name
