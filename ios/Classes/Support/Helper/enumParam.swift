@@ -108,4 +108,7 @@ enum FunctionParameters:String{
     case workPath = "workPath";
     case isAutoCut = "isAutoCut";
     case  numCopies = "numCopies";
+    case  responsePrinterModelMessage = "message";
+    case  responsePrinterModelStatus = "status";
+    
 }

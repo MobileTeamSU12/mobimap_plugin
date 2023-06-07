@@ -280,17 +280,17 @@ extension AppDelegatePlugin{
             self.printerKitControler.viewDidLoad()
             self.printerKitControler.checkConnectWifiWith() { status,mes, userInfoPrinter in
                 var agrResult = [String:AnyObject]()
-                agrResult["status"] = status as AnyObject
-                agrResult["mes"] = mes as AnyObject
+                agrResult[FunctionParameters.responsePrinterModelStatus.rawValue] = status as AnyObject
+                agrResult[FunctionParameters.responsePrinterModelMessage.rawValue] = mes as AnyObject
                 print(agrResult)
                 result(agrResult)
 //                if (!status){
 //                    self.printerKitControler.connectionWifi(ssid: userInfoPrinter!.printerWifiSSID! , pass: userInfoPrinter!.printerWifiPass!) { status in
-//                        agrResult["status"] = status as AnyObject
+//                        agrResult[FunctionParameters.responsePrinterModelStatus] = status as AnyObject
 //                        if (status){
-//                            agrResult["mes"] = "Kết nối mạng wifi thành công" as AnyObject
+//                            agrResult[FunctionParameters.responsePrinterModelMessage]= "Kết nối mạng wifi thành công" as AnyObject
 //                        } else {
-//                            agrResult["mes"] = "Kết nối mạng wifi không thành công" as AnyObject
+//                            agrResult[FunctionParameters.responsePrinterModelMessage]= "Kết nối mạng wifi không thành công" as AnyObject
 //                        }
 //                        print(agrResult)
 //                        result(agrResult)
@@ -316,14 +316,14 @@ extension AppDelegatePlugin{
             self.printerKitControler.openChanelPrinter(complete: {driver,userInfoPrinter in
                 var agrResult = [String:AnyObject]()
                 if (driver == nil){
-                    agrResult["status"] = false as AnyObject
-                    agrResult["mes"] = "Kết nối kênh máy in thất bại. Kiểm tra lại IP của máy in" as AnyObject
+                    agrResult[FunctionParameters.responsePrinterModelStatus.rawValue] = false as AnyObject
+                    agrResult[FunctionParameters.responsePrinterModelMessage.rawValue] = "Kết nối kênh máy in thất bại. Kiểm tra lại IP của máy in" as AnyObject
                     result(agrResult)
                     print(agrResult)
                     return
                 }
-                agrResult["status"] = true as AnyObject
-                agrResult["mes"] = "Kết nối kênh máy in thành công" as AnyObject
+                agrResult[FunctionParameters.responsePrinterModelStatus.rawValue] = true as AnyObject
+                agrResult[FunctionParameters.responsePrinterModelMessage.rawValue] = "Kết nối kênh máy in thành công" as AnyObject
                 result(agrResult)
                 print(agrResult)
             })
@@ -343,20 +343,20 @@ extension AppDelegatePlugin{
             self.printerSettingUser!.setPrintInfoSettingDefault(printerSettingUser!)
             self.printerKitControler.checkConnectWifi { status, printerSettingUser in
                 var agrResult = [String:AnyObject]()
-                agrResult["status"] = status as AnyObject
+                agrResult[FunctionParameters.responsePrinterModelStatus.rawValue] = status as AnyObject
                 if (status){
-                    agrResult["mes"] = "Kết nối mạng wifi thành công" as AnyObject
+                    agrResult[FunctionParameters.responsePrinterModelMessage.rawValue] = "Kết nối mạng wifi thành công" as AnyObject
                 } else {
-                    agrResult["mes"] = "Kết nối mạng wifi không thành công" as AnyObject
+                    agrResult[FunctionParameters.responsePrinterModelMessage.rawValue] = "Kết nối mạng wifi không thành công" as AnyObject
                 }
                 if (status){
                     self.printerKitControler.connectionWifi(ssid: self.printerSettingUser!.printerWifiSSID! , pass: self.printerSettingUser!.printerWifiPass!) { status in
                         var agrResult = [String:AnyObject]()
-                        agrResult["status"] = status as AnyObject
+                        agrResult[FunctionParameters.responsePrinterModelStatus.rawValue] = status as AnyObject
                         if (status){
-                            agrResult["mes"] = "Kết nối mạng wifi thành công" as AnyObject
+                            agrResult[FunctionParameters.responsePrinterModelMessage.rawValue] = "Kết nối mạng wifi thành công" as AnyObject
                         } else {
-                            agrResult["mes"] = "Kết nối mạng wifi không thành công" as AnyObject
+                            agrResult[FunctionParameters.responsePrinterModelMessage.rawValue] = "Kết nối mạng wifi không thành công" as AnyObject
                         }
                         result(agrResult)
                         print(agrResult)
@@ -383,8 +383,8 @@ extension AppDelegatePlugin{
             }
             self.printerKitControler.printFileWithChanel(filePath, autoCut: isAutoCut, numCopies: numCopies, labelSize: labelSize, resolution: resolution) { status, mes in
                 var agrResult = [String:AnyObject]()
-                agrResult["status"] = status as AnyObject
-                agrResult["mes"] = mes as AnyObject
+                agrResult[FunctionParameters.responsePrinterModelStatus.rawValue] = status as AnyObject
+                agrResult[FunctionParameters.responsePrinterModelMessage.rawValue] = mes as AnyObject
                 result(agrResult)
                 print(agrResult)
             }
