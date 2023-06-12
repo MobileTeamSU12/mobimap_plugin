@@ -215,6 +215,7 @@ public class BRLMPrinterKitControler: UIViewController {
 //                printSettings.autoCutForEachPageCount = 1
                printSettings.labelSize = BRLMPTPrintSettingsLabelSize(rawValue: labelSize) ?? .width24mm
                printSettings.resolution = BRLMPrintSettingsResolution(rawValue: resolution) ?? .high
+               printSettings.printOrientation = BRLMPrintSettingsOrientation.landscape
                var printError:BRLMPrintError = BRLMPrintError()
                if (filePath.lowercased().range(of: ".pdf", options: [.caseInsensitive, .diacriticInsensitive]) != nil){
                    printError = printerDriver!.printPDF(with: url, settings: printSettings)
