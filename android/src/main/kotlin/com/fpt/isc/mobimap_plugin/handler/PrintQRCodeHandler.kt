@@ -70,6 +70,8 @@ class PrintQRCodeHandler(
         printSettings.resolution = PrintImageSettings.Resolution.values()[resolution ?: 2]
         printSettings.isAutoCut = isAutoCut ?: true
         printSettings.numCopies = numCopies ?: 1
+        printSettings.printOrientation = PrintImageSettings.Orientation.Landscape
+
         return printSettings
     }
 
