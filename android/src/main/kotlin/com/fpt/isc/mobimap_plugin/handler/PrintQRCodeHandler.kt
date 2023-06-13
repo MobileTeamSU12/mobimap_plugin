@@ -1,6 +1,7 @@
 package com.fpt.isc.mobimap_plugin.handler
 
 import android.content.Context
+import android.util.Log
 import com.brother.sdk.lmprinter.PrintError
 import com.brother.sdk.lmprinter.PrinterDriver
 import com.brother.sdk.lmprinter.PrinterDriverGenerateResult
@@ -21,9 +22,11 @@ class PrintQRCodeHandler(
     result: MethodChannel.Result
 ) : BaseHandler(messenger, plugin, result) {
 
+    private val response: HashMap<String, Any> = HashMap()
+    private val successMessage:String = "In QRCode thành công"
+
     fun printQrCode(
-        onSuccess: () -> Unit,
-        onFailed: (message: String) -> Unit,
+        onSuccess: (HashMap<String, Any>) -> Unit,
         context: Context,
         printerResult: PrinterDriverGenerateResult,
         labelSize: Int?,
@@ -32,26 +35,39 @@ class PrintQRCodeHandler(
         numCopies: Int?,
         printerFilePath: String?,
     ) {
-
         val printerDriver = printerResult.driver
 
         // Printer settings
         val printSettings = settingPrinter(context, labelSize, resolution, isAutoCut, numCopies)
-//
-//        val file = File.createTempFile("tmp", ".png", context.externalCacheDir)
-//        context.assets.open("sample.png").use { input ->
-//            file.outputStream().use { output ->
-//                copyFileUsingStream(input, output)
-//            }
-//        }
 
-        val printError: PrintError = printerDriver.printPDF(printerFilePath, printSettings)
-        if (printError.code != PrintError.ErrorCode.NoError) {
-            onFailed("Error - Print Image: " + printError.code);
-        } else {
-            onSuccess()
+        if(!printerFilePath.isNullOrEmpty()){
+            val file = File(printerFilePath).extension
+            Log.d("file extension", file)
+            val printError: PrintError = when (file) {
+                "pdf" -> {
+                    printerDriver.printPDF(printerFilePath, printSettings)
+                }
+                "png" -> {
+                    printerDriver.printImage(printerFilePath, printSettings)
+                }
+                else -> {
+                    response["status"] = false
+                    response["message"] = "Error - Print QRCode: Not provided this extension"
+                    onSuccess(response)
+                    return
+                }
+            }
+
+            if (printError.code != PrintError.ErrorCode.NoError) {
+                response["status"] = false
+                response["message"] = "Error - Print QRCode: ${printError.code}"
+            } else {
+                response["status"] = true
+                response["message"] = successMessage
+            }
+            onSuccess(response)
+            printerDriver.closeChannel();
         }
-        printerDriver.closeChannel();
     }
 
     private fun settingPrinter(

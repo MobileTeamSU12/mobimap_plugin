@@ -230,9 +230,7 @@ class MobimapPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                     if (printerResult != null) {
                         GlobalScope.launch {
                             handler.printQrCode({
-                                result.success(true)
-                            }, {
-                                result.error(errorCode, it, "empty param")
+                                result.success(it)
                             }, context, printerResult!!, labelSize, resolution, isAutoCut, numCopies, printerFilePath)
                         }
                     }else {
