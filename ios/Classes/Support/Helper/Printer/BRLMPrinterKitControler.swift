@@ -215,12 +215,17 @@ public class BRLMPrinterKitControler: UIViewController {
 //                printSettings.autoCutForEachPageCount = 1
                printSettings.labelSize = BRLMPTPrintSettingsLabelSize(rawValue: labelSize) ?? .width24mm
                printSettings.resolution = BRLMPrintSettingsResolution(rawValue: resolution) ?? .high
-               let printError = printerDriver!.printPDF(with: url, settings: printSettings)
-               
-               if printError.code != .noError {
+               printSettings.printOrientation = BRLMPrintSettingsOrientation.landscape
+               var printError:BRLMPrintError = BRLMPrintError()
+               if (filePath.lowercased().range(of: ".pdf", options: [.caseInsensitive, .diacriticInsensitive]) != nil){
+                   printError = printerDriver!.printPDF(with: url, settings: printSettings)
+               } else  if (filePath.lowercased().range(of: ".png", options: [.caseInsensitive, .diacriticInsensitive]) != nil) {
+                    printError = printerDriver!.printImage(with: url, settings: printSettings)
+               }
+            if printError.code != .noError {
 //                   self.showPrinterAlert(title: "Error", message: "Print Image: \(String(describing: printError.code.rawValue))")
                    
-                   complete(false,printError.code == .customPaperSizeError ? "Thiết lập kích thức tem chưa đúng" : "Fail to create setting.")
+                   complete(false,printError.code == .setLabelSizeError ? "Thiết lập kích thức tem chưa đúng" : "Fail to create setting.")
                }
                else {
 //                   self.showPrinterAlert(title: "Success", message: "Print Image")
@@ -237,7 +242,7 @@ public class BRLMPrinterKitControler: UIViewController {
        }
        
    }
-    
+ 
     @IBAction  public func connectionWifi(_ sender: UIButton) {
         
         self.checkConnectWifi { status, printerSettingUser in
@@ -353,4 +358,8 @@ extension BRLMPrinterKitControler {
         
         self.present(alert, animated: true, completion: nil)
     }
+}
+
+extension String{
+    
 }
