@@ -103,7 +103,7 @@ class MobiMapPlugin {
     return ResponsePrinterModel.fromJson(result);
   }
 
-  static Future<void> printQrCode({
+  static Future<ResponsePrinterModel> printQrCode({
     required int labelSize,
     required int resolution,
     required bool isAutoCut,
@@ -119,6 +119,7 @@ class MobiMapPlugin {
       NativeArgument.printerFilePath: filePath,
     });
     print(result);
+    return ResponsePrinterModel.fromJson(result);
   }
 }
 
