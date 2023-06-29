@@ -389,6 +389,9 @@ extension AppDelegatePlugin{
                 print(agrResult)
             }
             break
+        case FunctionName.closeFlutterApp.rawValue:
+            Thread.exit()
+            break;
         default:
             break
         }
