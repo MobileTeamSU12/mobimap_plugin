@@ -87,6 +87,7 @@ enum FunctionName:String{
     case connectChannelPrinter = "connectChannelPrinter"
     case connectWifiPrinter = "connectWifiPrinter"
     case printQRCode = "printQRCode"
+    case closeFlutterApp = "closeFlutterApp"
     
 }
 enum FunctionParameters:String{
