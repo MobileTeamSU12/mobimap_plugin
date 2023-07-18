@@ -11,18 +11,12 @@ public extension UIDevice {
     var fullSystemVersion:String{
         return self.systemName.appending(" ").appending(self.systemVersion)
     }
-    var modelName:String {
-        var systemInfo = utsname()
-        uname(&systemInfo)
-        let machineMirror = Mirror(reflecting: systemInfo.machine)
-        let identifier = machineMirror.children.reduce("") { identifier, element in
-            guard let value = element.value as? Int8, value != 0 else { return identifier }
-            return identifier + String(UnicodeScalar(UInt8(value)))
-        }
+    @objc var modelName:String {
+        var identifier:String  = modelIdentifier;
         return mapToDevice(identifier: identifier)
     }
     func mapToDevice(identifier: String) -> String { // swiftlint:disable:this cyclomatic_complexity
-#if os(iOS)
+//#if os(iOS)
         switch identifier {
         case "iPod5,1":                                       return "iPod touch (5th generation)"
         case "iPod7,1":                                       return "iPod touch (6th generation)"
@@ -98,13 +92,39 @@ public extension UIDevice {
         case "i386", "x86_64", "arm64":                       return "Simulator \(mapToDevice(identifier: ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"] ?? "iOS"))"
         default:                                              return identifier
         }
-        #elseif os(tvOS)
-        switch identifier {
-        case "AppleTV5,3": return "Apple TV 4"
-        case "AppleTV6,2": return "Apple TV 4K"
-        case "i386", "x86_64": return "Simulator \(mapToDevice(identifier: ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"] ?? "tvOS"))"
-        default: return identifier
+//        #elseif os(tvOS)
+//        switch identifier {
+//        case "AppleTV5,3": return "Apple TV 4"
+//        case "AppleTV6,2": return "Apple TV 4K"
+//        case "i386", "x86_64": return "Simulator \(mapToDevice(identifier: ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"] ?? "tvOS"))"
+//        default: return identifier
+//        }
+//        #endif
+    }
+    @objc var modelIdentifier:String{
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let identifier = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8, value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
         }
-        #endif
+        return identifier;
+    }
+    @objc var modelSupportDisplay120Hz:Bool {
+        var identifierModelName:String  = modelName;
+        return mapSupportDisplay120HZ(identifier: identifierModelName)
+    }
+    
+    func mapSupportDisplay120HZ(identifier: String) -> Bool{
+        switch identifier {
+        case "iPhone 13 Pro",
+            "iPhone 13 Pro Max",
+            "iPhone 14 Pro",
+            "iPhone 14 Pro Max":
+            return true
+        default:
+            return false
+        }
     }
 }
