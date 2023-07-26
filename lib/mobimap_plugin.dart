@@ -43,6 +43,9 @@ class MobiMapPlugin {
   static Future<bool> getInternetConnection() async {
     return await NativeChannelHandler.call(function: NativeFunction.getInternetConnection) ?? false;
   }
+  static Future<void> closeAppIOS() async {
+    return await NativeChannelHandler.call(function: NativeFunction.closeFlutterApp);
+  }
 
   static StreamSubscription<bool>? listenInternetConnection({Function(bool status)? onReceiveData}) {
     return NativeChannelHandler.eventListener<bool>(

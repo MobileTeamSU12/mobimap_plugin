@@ -36,6 +36,7 @@ class NativeFunction{
   static const String getVersionApp = 'getVersionApp';
   static const String getHashCommit = 'getHashCommit';
   static const String launchBrowser = 'launchBrowser';
+  static const String closeFlutterApp = 'closeFlutterApp';
 
   ///Đang xem xét
   static const String saveImageToGallery = 'saveImageToGallery';
