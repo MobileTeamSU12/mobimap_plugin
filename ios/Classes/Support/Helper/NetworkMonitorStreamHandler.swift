@@ -25,13 +25,13 @@ open class NetworkMonitorStreamHandler:NSObject, FlutterStreamHandler{
         guard let sink = sink else { return }
 //        let check =  AppPermission(parentVCtrl: self.parentVCtrl).checkInternetConnectionStatus()
         AppPermission(parentVCtrl: self.parentVCtrl).checkInternetConnectionStatus { (status, mes) in
-            if ((self.timer) != nil){
-                [self.timer!.invalidate];
-                self.timer = nil;
-            }
-            if (!status){
-                self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.sendNetworkStatus), userInfo: nil, repeats: true)
-            }
+//            if ((self.timer) != nil){
+//                [self.timer!.invalidate];
+//                self.timer = nil;
+//            }
+//            if (!status){
+//                self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.sendNetworkStatus), userInfo: nil, repeats: true)
+//            }
             sink(status)
         }
         
