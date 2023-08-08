@@ -392,9 +392,9 @@ extension AppDelegatePlugin{
         case FunctionName.closeFlutterApp.rawValue:
             Thread.exit()
             break;
-        case FunctionName.launchBrowser.rawValue:
-            var agrResult = [String:AnyObject]()
-            var pdfFile:String = agrResult[FunctionParameters.url.rawValue] as! String
+        case FunctionName.launchBrowser.rawValue :
+            guard let param = call.arguments as? [String:AnyObject] else {return}
+            let pdfFile:String =  param[FunctionParameters.url.rawValue] as! String
             guard let url = URL.init(string: pdfFile) else { return }
             UIApplication.shared.open(url)
             break;
