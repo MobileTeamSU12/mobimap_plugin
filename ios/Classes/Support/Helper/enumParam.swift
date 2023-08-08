@@ -88,6 +88,8 @@ enum FunctionName:String{
     case connectWifiPrinter = "connectWifiPrinter"
     case printQRCode = "printQRCode"
     case closeFlutterApp = "closeFlutterApp"
+    case launchBrowser = "launchBrowser"
+    
     
 }
 enum FunctionParameters:String{
@@ -111,5 +113,7 @@ enum FunctionParameters:String{
     case  numCopies = "numCopies";
     case  responsePrinterModelMessage = "message";
     case  responsePrinterModelStatus = "status";
+    case  url = "url";
+    
     
 }

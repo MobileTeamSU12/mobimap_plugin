@@ -162,7 +162,7 @@ extension AppDelegatePlugin : CLLocationManagerDelegate {
 // MARK: Custom Method
 extension AppDelegatePlugin{
     
-    public func chanelMethodCallHandler(controler:FlutterViewController,call:FlutterMethodCall, result:@escaping FlutterResult){
+    public func chanelMethodCallHandler(controler:FlutterViewController,call:FlutterMethodCall, result:@escaping FlutterResult) -> <#Return Type#>{
         switch call.method{
         case FunctionName.getBatteryLevel.rawValue:
             let num = self.betteryLevel()
@@ -391,6 +391,12 @@ extension AppDelegatePlugin{
             break
         case FunctionName.closeFlutterApp.rawValue:
             Thread.exit()
+            break;
+        case FunctionName.launchBrowser.rawValue:
+            var agrResult = [String:AnyObject]()
+            var pdfFile:String = agrResult[FunctionParameters.url.rawValue] as! String
+            guard let url = URL.init(string: pdfFile) else { return nil }
+            UIApplication.shared.open(url)
             break;
         default:
             break
