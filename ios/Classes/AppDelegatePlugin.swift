@@ -177,6 +177,7 @@ extension AppDelegatePlugin{
             result(version)
             break
         case FunctionName.takePhoto.rawValue:
+            print(FunctionName.takePhoto.rawValue)
             guard let param = call.arguments as? [String:AnyObject] else {return}
             drawText = param[FunctionParameters.drawText.rawValue] as? NSArray ?? []
             filename = param[FunctionParameters.fileName.rawValue] as? String ?? ""
@@ -500,7 +501,7 @@ extension AppDelegatePlugin{
             }
         } else {
             if let assetURL = info[UIImagePickerController.InfoKey.referenceURL] as? URL {
-                let result = PHAsset.fetchAssets(withALAssetURLs: [assetURL], options: nil)
+                let result =  PHAsset.fetchAssets(withALAssetURLs: [assetURL], options: nil)
                 let asset = result.firstObject
                 self.getAssetUrl(mPhasset: asset!) { responseURL in
                     print(responseURL as Any)
@@ -514,9 +515,14 @@ extension AppDelegatePlugin{
         self.completionCallGetPathImage = completion
         FMapHelperPlugin.saveImage(withFileName: self.filename, image: image) { isComplete in
             if isComplete {
-                self.completionCallGetPathImage!("1")
+                let phFetchRes = PHAsset.fetchAssets(with: PHAssetMediaType.image , options: nil) // Fetch all PHAssets of images from Camera roll
+                let asset =  phFetchRes.lastObject//phFetchRes.object(at: 0) // retrieve cell 0 as a asset
+                self.getAssetUrl(mPhasset: asset!) { responseURL in
+                    print(responseURL as Any)
+                    self.completionCallGetPathImage!((responseURL?.path)!)
+                }
             } else {
-                self.completionCallGetPathImage!("0")
+                self.completionCallGetPathImage!("")
             }
         }
     }
