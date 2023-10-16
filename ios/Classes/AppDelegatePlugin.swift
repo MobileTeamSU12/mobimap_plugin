@@ -138,7 +138,9 @@ extension AppDelegatePlugin : CLLocationManagerDelegate {
     open func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location = locations.last! as CLLocation
         let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-        self.latLong = "\(String(center.latitude)) , \(String(center.longitude))"
+        let lat =  String(format: "%.8f",center.latitude)
+        let log =  String(format: "%.8f",center.longitude)
+        self.latLong = "\(lat) , \(log)"
         if (completionCallLocation != nil){
             completionCallLocation!(self.latLong)
         }
